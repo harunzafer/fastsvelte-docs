@@ -1,9 +1,0 @@
-{
-  "name": "fastsvelte-docs",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "mkdocs serve",
-    "build": "uv run mkdocs build -d public"
-  }
-}
