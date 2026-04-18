@@ -26,11 +26,9 @@ jobs:
         run: uv python install 3.12
 
       - name: Install dependencies
-        working-directory: docs
         run: uv sync
 
       - name: Build documentation
-        working-directory: docs
         run: uv run mkdocs build -d public
 
       - name: Deploy prebuilt static files to Vercel
