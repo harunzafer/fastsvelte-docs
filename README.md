@@ -2,10 +2,10 @@
 
 # 📚 FastSvelte Documentation
 
-Official documentation for [**FastSvelte**](https://github.com/yourusername/fastsvelte) - The modern full-stack framework for building blazing-fast web applications.
+Official documentation for [**FastSvelte**](https://fastsvelte.dev) - The modern full-stack framework for building blazing-fast web applications.
 
-[![FastSvelte](https://img.shields.io/badge/FastSvelte-Main%20Repository-ff3e00?style=for-the-badge&logo=svelte)](https://github.com/yourusername/fastsvelte)
-[![Documentation](https://img.shields.io/badge/View-Live%20Docs-blue?style=for-the-badge)](https://your-docs-url.vercel.app)
+[![FastSvelte](https://img.shields.io/badge/FastSvelte-Website-ff3e00?style=for-the-badge&logo=svelte)](https://fastsvelte.dev)
+[![Documentation](https://img.shields.io/badge/View-Live%20Docs-blue?style=for-the-badge)](https://docs.fastsvelte.dev)
 
 </div>
 
