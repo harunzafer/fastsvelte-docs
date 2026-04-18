@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  <!-- Dynamic favicon based on theme -->
+  <link rel="icon" type="image/png" href="{{ 'assets/images/favicon.png' | url }}" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="{{ 'assets/images/favicon-dark.png' | url }}" media="(prefers-color-scheme: dark)">
+
+  <!-- Vercel Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+{% endblock %}
+
+{% block footer %}
+  {{ super() }}
+  <script>
+    // Update copyright year dynamically
+    document.addEventListener('DOMContentLoaded', function() {
+      const footer = document.querySelector('.md-copyright__highlight');
+      if (footer) {
+        footer.innerHTML = footer.innerHTML.replace(/Copyright © \d{4}/, 'Copyright © ' + new Date().getFullYear());
+      }
+    });
+  </script>
+{% endblock %}

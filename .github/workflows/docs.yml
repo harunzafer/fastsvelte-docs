@@ -1,0 +1,41 @@
+name: Deploy Documentation to Vercel
+
+on:
+  push:
+    branches: [main]
+    paths: ["docs/**"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        working-directory: docs
+        run: uv sync
+
+      - name: Build documentation
+        working-directory: docs
+        run: uv run mkdocs build -d public
+
+      - name: Deploy prebuilt static files to Vercel
+        uses: amondnet/vercel-action@v42.2.0
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./docs/public
+          vercel-args: "--prod"
+          scope: ${{ secrets.VERCEL_ORG_ID }}
