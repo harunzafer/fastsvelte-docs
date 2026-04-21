@@ -55,7 +55,32 @@ cd landing && npm run build && npm run check            # For landing page chang
 git push origin main
 ```
 
-### 2. Cherry-pick
+### 2. Rebase
+
+An alternative to merge that replays your commits on top of the upstream changes, resulting in a linear history:
+
+```bash
+# Set up upstream remote (same as merge method)
+git remote add upstream https://github.com/harunzafer/fastsvelte.git
+
+# Fetch updates
+git fetch upstream
+
+# Rebase your branch onto upstream
+git rebase upstream/main
+
+# Resolve any conflicts, then continue
+git rebase --continue
+
+# Push to your repository (force required since history was rewritten)
+git push --force-with-lease origin main
+```
+
+**Best for:** Projects early in development with few commits, or when you want a clean linear history.
+
+**Caution:** Avoid rebasing if you have a shared branch with collaborators — it rewrites history.
+
+### 3. Cherry-pick
 
 For selective updates or when you've modified core files extensively:
 
@@ -71,7 +96,7 @@ git cherry-pick --continue
 ```
 
 
-### 3. Manual Copy
+### 4. Manual Copy
 
 Remove the FastSvelte remote and manually copy changes when needed:
 
