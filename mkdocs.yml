@@ -1,5 +1,5 @@
 site_name: FastSvelte Documentation
-site_description: FastSvelte - A fullstack SaaS starter kit with FastAPI and SvelteKit
+site_description: FastSvelte is a fullstack SaaS starter kit built with FastAPI (Python) and SvelteKit SPA. Includes session auth, Google OAuth, Stripe, multi-tenancy, and admin dashboards. Ship your Python SaaS in hours.
 site_author: FastSvelte Team
 site_url: https://docs.fastsvelte.dev
 copyright: Copyright &copy; 2025 <a href="https://fastsvelte.dev" target="_blank">FastSvelte</a> Team
