@@ -1,6 +1,6 @@
 ---
-description: "FastSvelte - A fullstack SaaS starter kit built with FastAPI (Python) and SvelteKit (TypeScript). Get authentication, multi-tenancy, and payments out of the box."
-keywords: "fastapi, sveltekit, saas starter kit, typescript, python, fullstack, authentication, multi-tenant, stripe payments"
+description: "FastSvelte is a fullstack SaaS starter kit and boilerplate built with FastAPI (Python) and SvelteKit SPA (TypeScript). Get session auth, Google OAuth, Stripe, multi-tenancy, and admin dashboards out of the box."
+keywords: "fastapi, sveltekit, saas starter kit, fastapi svelte, fastapi sveltekit starter, sveltekit spa fastapi, saas starter kit python, fastapi fullstack template, sveltekit saas boilerplate, fastapi boilerplate, python saas boilerplate, orval sveltekit, svelte 5, typescript, fullstack, authentication, multi-tenant, stripe payments"
 ---
 
 # FastSvelte
