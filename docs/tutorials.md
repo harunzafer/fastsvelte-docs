@@ -518,8 +518,7 @@ Create the projects list page at `frontend/src/routes/(protected)/projects/+page
   async function loadProjects() {
     loading = true;
     try {
-      const response = await listProjects();
-      projects = response.data || [];
+      projects = (await listProjects()) || [];
     } catch (err) {
       error = "Failed to load projects";
       console.error("Error loading projects:", err);
@@ -544,8 +543,8 @@ Create the projects list page at `frontend/src/routes/(protected)/projects/+page
 <div class="container mx-auto p-6">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Projects</h1>
-    <button class="btn btn-primary" on:click="{()" ="">
-      goto('/projects/new')}> Create Project
+    <button class="btn btn-primary" onclick={() => goto('/projects/new')}>
+      Create Project
     </button>
   </div>
 
@@ -560,8 +559,8 @@ Create the projects list page at `frontend/src/routes/(protected)/projects/+page
   {:else if projects.length === 0}
   <div class="text-center py-8">
     <p class="text-gray-500 mb-4">No projects yet</p>
-    <button class="btn btn-primary" on:click="{()" ="">
-      goto('/projects/new')}> Create Your First Project
+    <button class="btn btn-primary" onclick={() => goto('/projects/new')}>
+      Create Your First Project
     </button>
   </div>
   {:else}
@@ -577,14 +576,14 @@ Create the projects list page at `frontend/src/routes/(protected)/projects/+page
           Created: {new Date(project.created_at).toLocaleDateString()}
         </p>
         <div class="card-actions justify-end">
-          <button class="btn btn-outline btn-sm" on:click="{()" ="">
-            goto(`/projects/${project.id}`)} > View
+          <button class="btn btn-outline btn-sm" onclick={() => goto(`/projects/${project.id}`)}>
+            View
           </button>
-          <button class="btn btn-outline btn-sm" on:click="{()" ="">
-            goto(`/projects/${project.id}/edit`)} > Edit
+          <button class="btn btn-outline btn-sm" onclick={() => goto(`/projects/${project.id}/edit`)}>
+            Edit
           </button>
-          <button class="btn btn-error btn-outline btn-sm" on:click="{()" ="">
-            handleDelete(project.id)} > Delete
+          <button class="btn btn-error btn-outline btn-sm" onclick={() => handleDelete(project.id)}>
+            Delete
           </button>
         </div>
       </div>
@@ -640,7 +639,7 @@ Create the new project form at `frontend/src/routes/(protected)/projects/new/+pa
   </div>
   {/if}
 
-  <form on:submit|preventDefault="{handleSubmit}" class="space-y-4">
+  <form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-4">
     <div class="form-control">
       <label class="label" for="name">
         <span class="label-text">Project Name *</span>
@@ -649,9 +648,9 @@ Create the new project form at `frontend/src/routes/(protected)/projects/new/+pa
         id="name"
         type="text"
         class="input input-bordered"
-        bind:value="{form.name}"
+        bind:value={form.name}
         required
-        disabled="{loading}"
+        disabled={loading}
       />
     </div>
 
@@ -663,8 +662,8 @@ Create the new project form at `frontend/src/routes/(protected)/projects/new/+pa
         id="description"
         class="textarea textarea-bordered"
         rows="3"
-        bind:value="{form.description}"
-        disabled="{loading}"
+        bind:value={form.description}
+        disabled={loading}
       ></textarea>
     </div>
 
@@ -673,12 +672,12 @@ Create the new project form at `frontend/src/routes/(protected)/projects/new/+pa
         type="submit"
         class="btn btn-primary flex-1"
         class:loading
-        disabled="{loading}"
+        disabled={loading}
       >
         {loading ? 'Creating...' : 'Create Project'}
       </button>
-      <button type="button" class="btn btn-outline" on:click="{()" ="">
-        goto('/projects')} disabled={loading} > Cancel
+      <button type="button" class="btn btn-outline" onclick={() => goto('/projects')} disabled={loading}>
+        Cancel
       </button>
     </div>
   </form>
