@@ -5,7 +5,7 @@ keywords: "fastapi, sveltekit, saas starter kit, fastapi svelte, fastapi sveltek
 
 # FastSvelte
 
-[FastSvelte](https://fastsvelte.dev) is a fullstack SaaS starter kit built with **FastAPI** (Python) and **SvelteKit** (TypeScript). Get authentication, multi-tenancy, and payments out of the box.
+[FastSvelte](https://fastsvelte.dev) is a fullstack SaaS starter kit built with **FastAPI** (Python) and **SvelteKit** (TypeScript). It gives you auth, Google OAuth, Stripe, multi-tenancy, admin & user dashboards, and [many more](https://fastsvelte.dev/#features) — so you can focus on what makes your SaaS unique.
 
 ## Quick Start
 
