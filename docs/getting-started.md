@@ -200,6 +200,40 @@ After logging in, you can:
 
     Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive API documentation.
 
+## Setting Up for Your Team
+
+Once your initial setup is working, getting teammates onboarded is straightforward — **only the first developer runs `init.py`**. Everyone else starts from your committed, pre-configured repository.
+
+### 1. Push to Your Own Repository
+
+Create a new repository on GitHub (or your preferred host), then push:
+
+```bash
+# Add your own repository as the remote
+git remote add origin git@github.com:your-org/your-project.git
+git push -u origin main
+```
+
+!!! tip
+
+    You can safely delete `init.py` before your first commit — it's only needed for initial setup. The same applies to the `/docs` folder.
+
+### 2. Team Members Clone and Configure
+
+Other developers should:
+
+1. **Clone your repository** — not the FastSvelte template
+2. **Install prerequisites** — `uv`, Node.js 22+, Sqitch, Docker
+3. **Create their `.env` files** — copy the `.env.example` files in `backend/`, `frontend/`, `landing/`, and `db/` and fill in the values (share secrets securely, never via git)
+4. **Start the database** — `docker compose up -d` from the project root
+5. **Run database migrations** — from the `db/` directory
+6. **Install dependencies** — `uv sync` in `backend/`, `npm install` in `frontend/` and `landing/`
+7. **Create a local admin user** — `cd backend && uv run scripts/create_admin.py`
+
+!!! warning "Never commit `.env` files"
+
+    `.env` files contain secrets and are excluded from git. Share environment variable values with teammates through a secure channel (1Password, Doppler, a shared secrets manager, etc.).
+
 ## Environment Variables
 
 The backend environment variables are in `backend/.env` using the `FS_` prefix. These are loaded using [Pydantic Settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/). Here are the core variables you should be aware of:
