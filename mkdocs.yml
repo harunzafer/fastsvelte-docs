@@ -80,6 +80,8 @@ markdown_extensions:
       alternate_style: true
   - attr_list
   - md_in_html
+  - toc:
+      permalink: true
 
 # Page tree
 nav:
