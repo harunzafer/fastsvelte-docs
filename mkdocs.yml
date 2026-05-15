@@ -60,6 +60,33 @@ plugins:
   - search
   - meta
   - social
+  - llmstxt:
+      full_output: llms-full.txt
+      markdown_description: |
+        Designed for solo developers and small teams shipping Python-backed SaaS in hours, not weeks.
+        Stack: FastAPI + SvelteKit SPA + PostgreSQL + Stripe. Supports both B2C (single user) and B2B (multi-tenant with organizations, roles, invitations) modes out of the box.
+        Includes generated TypeScript clients (Orval), session-based auth, Google OAuth, admin dashboards, and one-command project initialization.
+
+        For the full documentation content concatenated into a single file, see [llms-full.txt](https://docs.fastsvelte.dev/llms-full.txt).
+      sections:
+        Getting Started:
+          - index.md: FastSvelte documentation home — overview and what's included.
+          - getting-started.md: Prerequisites, clone, install, and run your first FastSvelte instance.
+          - development.md: Local development workflow, hot reload, and project structure.
+        Architecture:
+          - architecture-overview.md: Stack overview — FastAPI backend, SvelteKit SPA frontend, PostgreSQL, auth, billing, multi-tenancy.
+          - b2b-mode.md: Multi-tenant B2B mode — organizations, roles, invitations.
+        Tutorials:
+          - tutorials.md: Step-by-step tutorials covering CRUD APIs, SvelteKit SPA setup, form validation, and authentication.
+        Integrations:
+          - integrations/index.md: Overview of supported integrations.
+          - integrations/stripe.md: Stripe billing setup — products, subscriptions, webhooks.
+        Deployment:
+          - deployment/index.md: Deployment overview and platform comparison.
+          - deployment/*.md
+        Operations:
+          - getting-updates.md: How to pull FastSvelte updates into your fork.
+          - troubleshooting.md: Common issues and fixes.
 
 # Extensions
 markdown_extensions:
@@ -112,6 +139,7 @@ nav:
       - Docker Compose: deployment/docker-compose.md
   - Getting Updates: getting-updates.md
   - Troubleshooting: troubleshooting.md
+  - llms.txt: /llms.txt
 
 # Output directory for Vercel (will be overridden by build command)
 site_dir: public
