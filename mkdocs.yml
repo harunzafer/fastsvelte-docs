@@ -1,5 +1,5 @@
 site_name: FastSvelte Documentation
-site_description: FastSvelte is a fullstack SaaS starter kit built with FastAPI (Python) and SvelteKit SPA. Includes session auth, Google OAuth, Stripe, multi-tenancy, and admin dashboards. Ship your Python SaaS in hours.
+site_description: FastSvelte is a fullstack SaaS starter kit built with FastAPI (Python) and SvelteKit (SPA). Auth, Google OAuth, Stripe, multi-tenancy, deploy anywhere.
 site_author: FastSvelte Team
 site_url: https://docs.fastsvelte.dev
 copyright: Copyright &copy; 2025 <a href="https://fastsvelte.dev" target="_blank">FastSvelte</a> Team
@@ -63,9 +63,7 @@ plugins:
   - llmstxt:
       full_output: llms-full.txt
       markdown_description: |
-        Designed for solo developers and small teams shipping Python-backed SaaS in hours, not weeks.
-        Stack: FastAPI + SvelteKit SPA + PostgreSQL + Stripe. Supports both B2C (single user) and B2B (multi-tenant with organizations, roles, invitations) modes out of the box.
-        Includes generated TypeScript clients (Orval), session-based auth, Google OAuth, admin dashboards, and one-command project initialization.
+        FastSvelte is a fullstack SaaS starter kit built with FastAPI (Python) and SvelteKit (SPA). Auth, Google OAuth, Stripe, multi-tenancy, deploy anywhere. Self-hosted, full source code, no platform lock-in. Includes generated TypeScript API clients via Orval, admin and user dashboards, and Docker Compose for local development. Supports both B2C and B2B (multi-tenant with organizations, roles, and invitations) modes.
 
         For the full documentation content concatenated into a single file, see [llms-full.txt](https://docs.fastsvelte.dev/llms-full.txt).
       sections:
