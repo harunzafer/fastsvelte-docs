@@ -225,8 +225,8 @@ Other developers should:
 1. **Clone your repository** — not the FastSvelte template
 2. **Install prerequisites** — `uv`, Node.js 22+, Sqitch, Docker
 3. **Create their `.env` files** — copy the `.env.example` files in `backend/`, `frontend/`, `landing/`, and `db/` and fill in the values (share secrets securely, never via git)
-4. **Start the database** — `docker compose up -d` from the project root
-5. **Run database migrations** — from the `db/` directory
+4. **Start the database** — `docker compose -f backend/docker-compose.yml up db -d` from the project root
+5. **Run database migrations** — `cd db && ./sqitch.sh dev deploy`
 6. **Install dependencies** — `uv sync` in `backend/`, `npm install` in `frontend/` and `landing/`
 7. **Create a local admin user** — `cd backend && uv run scripts/create_admin.py`
 
