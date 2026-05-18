@@ -39,7 +39,7 @@ FS_SENDGRID_SENDER_NAME="Your App Name"
 
 ```bash
 # Test email sending via API
-curl -X POST http://localhost:8000/password/reset \
+curl -X POST http://localhost:8000/password/forgot \
   -H "Content-Type: application/json" \
   -d '{"email": "test@example.com"}'
 ```
@@ -203,7 +203,7 @@ def cors_origins(self) -> list[str]:
 
 ```bash
 # Test password reset email
-curl -X POST http://localhost:8000/password/reset \
+curl -X POST http://localhost:8000/password/forgot \
   -H "Content-Type: application/json" \
   -d '{"email": "user@example.com"}'
 ```
