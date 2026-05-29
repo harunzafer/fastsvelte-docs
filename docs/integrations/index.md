@@ -15,18 +15,23 @@ The application supports multiple email providers for transactional emails inclu
 
 Set `FS_EMAIL_PROVIDER` in `backend/.env` to one of: `resend`, `sendgrid`, `azure`, or `stub`.
 
-Each provider has a corresponding package in `backend/pyproject.toml`. Delete the two lines you don't need, then run `uv sync`:
+For the providers you don't use, clean up all three places:
 
-```toml
-# In backend/pyproject.toml — delete the providers you won't use
-"azure-communication-email>=1.1.0",  # FS_EMAIL_PROVIDER=azure
-"resend[async]>=2.0.0",              # FS_EMAIL_PROVIDER=resend
-"sendgrid>=6.12.5",                  # FS_EMAIL_PROVIDER=sendgrid
-```
+1. **`backend/pyproject.toml`** — delete the two package lines you don't need, then run `uv sync`:
 
-```bash
-cd backend && uv sync
-```
+    ```toml
+    "azure-communication-email>=1.1.0",  # FS_EMAIL_PROVIDER=azure
+    "resend[async]>=2.0.0",              # FS_EMAIL_PROVIDER=resend
+    "sendgrid>=6.12.5",                  # FS_EMAIL_PROVIDER=sendgrid
+    ```
+
+    ```bash
+    cd backend && uv sync
+    ```
+
+2. **`backend/.env`** — remove the env vars for the unused providers.
+
+3. **`backend/app/config/settings.py`** — remove the corresponding settings fields (e.g. `resend_api_key`, `resend_sender_address`, `resend_sender_name`).
 
 ### Resend
 
