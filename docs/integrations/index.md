@@ -11,6 +11,48 @@ This guide covers configuration for email services, payment processing, and auth
 
 The application supports multiple email providers for transactional emails including verification, password reset, and notifications.
 
+### Choosing a Provider
+
+Set `FS_EMAIL_PROVIDER` in `backend/.env` to one of: `resend`, `sendgrid`, `azure`, or `stub`.
+
+For the providers you don't use, clean up all three places:
+
+1. **`backend/pyproject.toml`** — delete the two package lines you don't need, then run `uv sync`:
+
+    ```toml
+    "azure-communication-email>=1.1.0",  # FS_EMAIL_PROVIDER=azure
+    "resend[async]>=2.0.0",              # FS_EMAIL_PROVIDER=resend
+    "sendgrid>=6.12.5",                  # FS_EMAIL_PROVIDER=sendgrid
+    ```
+
+    ```bash
+    cd backend && uv sync
+    ```
+
+2. **`backend/.env`** — remove the env vars for the unused providers.
+
+3. **`backend/app/config/settings.py`** — remove the corresponding settings fields (e.g. `resend_api_key`, `resend_sender_address`, `resend_sender_name`).
+
+### Resend
+
+Resend is a modern email API with a generous free tier — recommended for most new projects.
+
+#### Setup
+
+1. **Create Resend Account**: Sign up at [resend.com](https://resend.com)
+2. **Get API Key**: Create an API key at [resend.com/api-keys](https://resend.com/api-keys)
+3. **Verify Domain**: Add and verify your sending domain at [resend.com/domains](https://resend.com/domains)
+
+#### Configuration
+
+```bash
+FS_EMAIL_PROVIDER="resend"
+
+FS_RESEND_API_KEY="re_your-resend-api-key-here"
+FS_RESEND_SENDER_ADDRESS="noreply@yourdomain.com"
+FS_RESEND_SENDER_NAME="Your App Name"
+```
+
 ### SendGrid
 
 SendGrid provides email delivery with straightforward API integration.
@@ -23,25 +65,12 @@ SendGrid provides email delivery with straightforward API integration.
 
 #### Configuration
 
-Add these variables to your `backend/.env` file:
-
 ```bash
-# Email provider
 FS_EMAIL_PROVIDER="sendgrid"
 
-# SendGrid configuration
 FS_SENDGRID_API_KEY="SG.your-sendgrid-api-key-here"
 FS_SENDGRID_SENDER_ADDRESS="noreply@yourdomain.com"
 FS_SENDGRID_SENDER_NAME="Your App Name"
-```
-
-#### Testing Email Setup
-
-```bash
-# Test email sending via API
-curl -X POST http://localhost:8000/password/forgot \
-  -H "Content-Type: application/json" \
-  -d '{"email": "test@example.com"}'
 ```
 
 ### Azure Email Service
@@ -49,10 +78,8 @@ curl -X POST http://localhost:8000/password/forgot \
 For Azure-based deployments, you can use Azure Communication Services.
 
 ```bash
-# Email provider
 FS_EMAIL_PROVIDER="azure"
 
-# Azure Email configuration
 FS_AZURE_EMAIL_CONNECTION_STRING="endpoint=https://..."
 FS_AZURE_EMAIL_SENDER_ADDRESS="noreply@yourdomain.com"
 ```
@@ -66,6 +93,15 @@ FS_EMAIL_PROVIDER="stub"
 ```
 
 This logs emails to console instead of sending them.
+
+### Testing Email Setup
+
+```bash
+# Test email sending via API
+curl -X POST http://localhost:8000/password/forgot \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com"}'
+```
 
 ## Payment Processing (Stripe)
 
