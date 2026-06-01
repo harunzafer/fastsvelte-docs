@@ -152,6 +152,16 @@ npm run dev
 
 Regular dependency upgrades keep your application secure and up-to-date. FastSvelte provides a structured upgrade process with automated tests to verify compatibility.
 
+### Upgrade Policy
+
+FastSvelte ships a [Dependabot config](https://github.com/) (`.github/dependabot.yml`) so routine upgrades are automated and reviewable:
+
+- **Automated, weekly:** Dependabot opens **grouped** PRs once a week per ecosystem — `npm` (frontend), `npm` (landing), and `uv` (backend). The backend uses a 7-day cooldown so brand-new releases settle before they're proposed.
+- **Minor & patch upgrades:** handled by those weekly PRs. Review and merge once CI passes (`backend.yml`, `frontend.yml`, `landing.yml`).
+- **Major versions:** **excluded** from Dependabot (`version-update:semver-major` is ignored) and done deliberately, one component at a time, since they may require code changes — follow the major-version workflow below.
+- **Security updates:** fast-track immediately, outside the weekly cadence.
+- **Version pinning:** `pyproject.toml` and `package.json` declare lower-bound (`>=`) ranges; the lockfiles (`uv.lock`, `package-lock.json`) pin exact versions and are committed — so installs are reproducible while ranges stay flexible.
+
 ### Backend Dependencies (Python)
 
 FastSvelte uses `uv` to manage Python dependencies.
