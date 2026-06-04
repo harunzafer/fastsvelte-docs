@@ -24,11 +24,11 @@ We'll build a Projects feature that allows users to:
 First, create a new migration for the projects table.
 
 ```bash
-cd db
+cd backend/db
 sqitch add projects -n "Add projects table"
 ```
 
-Edit the generated migration file `db/deploy/projects.sql`:
+Edit the generated migration file `backend/db/deploy/projects.sql`:
 
 ```sql
 -- Deploy {schema_name}:projects to pg
@@ -52,7 +52,7 @@ CREATE INDEX IF NOT EXISTS idx_project_user ON {schema_name}.project(user_id);
 COMMIT;
 ```
 
-Create the revert script `db/revert/projects.sql`:
+Create the revert script `backend/db/revert/projects.sql`:
 
 ```sql
 -- Revert {schema_name}:projects from pg

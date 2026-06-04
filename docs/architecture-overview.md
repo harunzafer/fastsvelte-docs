@@ -16,7 +16,7 @@ fastsvelte/
 ├── backend/          # FastAPI + Python (your API)
 ├── frontend/         # SvelteKit + TypeScript (admin dashboard)
 ├── landing/          # SvelteKit (marketing site)
-└── db/               # PostgreSQL + Sqitch (database migrations)
+└── backend/db/       # PostgreSQL + Sqitch (database migrations)
 ```
 
 ### Why a monorepo?
@@ -205,11 +205,11 @@ FastSvelte uses Sqitch for database schema versioning. Because migrations are pl
 Create a new migration:
 
 ```bash
-cd db
+cd backend/db
 sqitch add add_feature -n "Add feature table"
 ```
 
-This creates three SQL files in the `db/` directory:
+This creates three SQL files in the `backend/db/` directory:
 
 - `deploy/add_feature.sql` - How to apply the change
 - `revert/add_feature.sql` - How to undo it
