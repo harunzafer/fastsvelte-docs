@@ -32,7 +32,7 @@ bash: ./init.py: Permission denied
 
 ```bash
 chmod +x init.py
-chmod +x db/sqitch.sh
+chmod +x backend/db/sqitch.sh
 ```
 
 **Port conflicts during init**
@@ -209,7 +209,7 @@ bash: ./sqitch.sh: Permission denied
 **Solution:** Make script executable:
 
 ```bash
-chmod +x db/sqitch.sh
+chmod +x backend/db/sqitch.sh
 ```
 
 **Connection pool exhausted**
