@@ -116,6 +116,7 @@ nav:
   - Tutorials: tutorials.md
   - Architecture Overview: architecture-overview.md
   - B2B Mode: b2b-mode.md
+  - SEO: seo.md
   - Integrations:
       - integrations/index.md
       - Stripe: integrations/stripe.md
