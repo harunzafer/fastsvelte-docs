@@ -1,5 +1,5 @@
 site_name: FastSvelte Documentation
-site_description: FastSvelte is a fullstack SaaS starter kit built with FastAPI (Python) and SvelteKit (SPA). Auth, Google OAuth, Stripe, multi-tenancy, deploy anywhere.
+site_description: "FastSvelte is a FastAPI (Python) + SvelteKit starter kit: auth, payments, and multi-tenancy, plus AI-ready usage metering, per-plan credit allowances, and top-ups. Self-hosted, full source code, no platform lock-in. Includes generated TypeScript API clients via Orval, admin and user dashboards, and Docker Compose for local development. Supports both B2C and B2B (multi-tenant with organizations, roles, and invitations) modes."
 site_author: FastSvelte Team
 site_url: https://docs.fastsvelte.dev
 copyright: Copyright &copy; 2025 <a href="https://fastsvelte.dev" target="_blank">FastSvelte</a> Team
@@ -64,7 +64,7 @@ plugins:
   - llmstxt:
       full_output: llms-full.txt
       markdown_description: |
-        FastSvelte is a fullstack SaaS starter kit built with FastAPI (Python) and SvelteKit (SPA). Auth, Google OAuth, Stripe, multi-tenancy, deploy anywhere. Self-hosted, full source code, no platform lock-in. Includes generated TypeScript API clients via Orval, admin and user dashboards, and Docker Compose for local development. Supports both B2C and B2B (multi-tenant with organizations, roles, and invitations) modes.
+        FastSvelte is a FastAPI (Python) + SvelteKit starter kit: auth, payments, and multi-tenancy, plus AI-ready usage metering, per-plan credit allowances, and top-ups. Self-hosted, full source code, no platform lock-in. Includes generated TypeScript API clients via Orval, admin and user dashboards, and Docker Compose for local development. Supports both B2C and B2B (multi-tenant with organizations, roles, and invitations) modes.
 
         For the full documentation content concatenated into a single file, see [llms-full.txt](https://docs.fastsvelte.dev/llms-full.txt).
       sections:
