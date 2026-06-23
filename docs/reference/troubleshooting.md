@@ -522,6 +522,6 @@ When reporting issues, include:
 
 **Resources:**
 
-- [Architecture Overview](architecture-overview.md) - Understanding the system
-- [Development Guide](development.md) - Development workflows
-- [Integrations](integrations/index.md) - External service configuration
+- [Architecture Overview](architecture.md) - Understanding the system
+- [Development Guide](../guides/development-workflow.md) - Development workflows
+- [Integrations](../features/authentication.md) - External service configuration

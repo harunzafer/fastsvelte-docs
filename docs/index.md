@@ -1,87 +1,39 @@
 ---
-description: "FastSvelte is a fullstack SaaS starter kit and boilerplate built with FastAPI (Python) and SvelteKit SPA (TypeScript). Get session auth, Google OAuth, Stripe, multi-tenancy, and admin dashboards out of the box."
-keywords: "fastapi, sveltekit, saas starter kit, fastapi svelte, fastapi sveltekit starter, sveltekit spa fastapi, saas starter kit python, fastapi fullstack template, sveltekit saas boilerplate, fastapi boilerplate, python saas boilerplate, orval sveltekit, svelte 5, typescript, fullstack, authentication, multi-tenant, stripe payments"
+description: "FastSvelte is a fullstack SaaS starter kit built with FastAPI (Python) and SvelteKit SPA (TypeScript). Get session auth, Google OAuth, Stripe, multi-tenancy, AI copilot with credit billing, and admin dashboards out of the box."
+keywords: "fastapi, sveltekit, saas starter kit, fastapi svelte, fastapi sveltekit starter, sveltekit spa fastapi, saas starter kit python, ai saas starter kit, orval sveltekit, svelte 5, typescript, fullstack, authentication, multi-tenant, stripe payments, ai credit billing"
 ---
 
-# FastSvelte
+# Quick Start
 
-[FastSvelte](https://fastsvelte.dev) is a fullstack SaaS starter kit built with **FastAPI** (Python) and **SvelteKit** (TypeScript). It gives you auth, Google OAuth, Stripe, multi-tenancy, admin & user dashboards, and [many more](https://fastsvelte.dev/#features) — so you can focus on what makes your SaaS unique.
+[FastSvelte](https://fastsvelte.dev) is a fullstack SaaS starter kit built with **FastAPI** (Python) and **SvelteKit** (TypeScript). Get it running locally in a few minutes, then browse [Features](features/authentication.md) for everything that's included.
 
-## Quick Start
+The interactive `init.py` script handles setup end to end. Clone the repo, run `init.py`, then create an admin account and start the servers:
 
-Get up and running in minutes:
-
-```bash
-# Clone the repository
+```sh
+# 1. Clone, then drop the template remote
 git clone https://github.com/harunzafer/fastsvelte.git my-project
-cd my-project
+cd my-project && git remote remove origin
 
-# Run the interactive setup
+# 2. Interactive setup — sets up your project for you (--dry-run to preview)
 uv run init.py
 
-# Create admin user
+# 3. Create a system admin, then start the backend
 cd backend
 uv run scripts/create_admin.py
-
-# Start the backend
 uv run uvicorn app.main:app --reload
 
-# In a new terminal, start the frontend
-cd frontend
-npm run dev
+# 4. In a new terminal, start the frontend
+cd frontend && npm run dev
 ```
 
-Visit `http://localhost:5173` and login with your admin credentials.
+!!! info "Prerequisites"
 
-**→ [Complete Setup Guide](getting-started.md)** for detailed configuration and troubleshooting.
+    You'll need [uv](https://docs.astral.sh/uv/#installation), **Node.js 22+**, [Sqitch](https://sqitch.org/download/), and **Docker** (running). `init.py` checks all four first and exits with install instructions if any are missing — so you can just run it and fix what it flags.
 
----
+Open **[localhost:5173](http://localhost:5173)** and log in with the admin you created. The backend and interactive API docs are at [localhost:8000/docs](http://localhost:8000/docs); the landing template runs at [localhost:5174](http://localhost:5174).
 
-## Why FastSvelte?
+## Next steps
 
-- **Skip months of setup work** - Authentication, payments, and multi-tenancy are already built and tested.
-- **Type-safe from API to UI** - Auto-generated TypeScript client means fewer bugs and better DX.
-- **Built for B2B and B2C** - Organization-based architecture adapts to your business model. See [B2B Mode](b2b-mode.md).
-- **Production-ready from day one** - Session auth, migrations, Docker deployment all configured.
-- **Clean, maintainable code** - Dependency injection, repository patterns, and clear separation of concerns make scaling effortless.
-- **AI-friendly architecture** - Structured patterns and comprehensive docs help AI assistants generate correct code.
-
-## Technology Stack
-
-- **Backend**: FastAPI with PostgreSQL, Sqitch migrations, and uv for package management
-- **Frontend**: SvelteKit with TypeScript, TailwindCSS, and DaisyUI
-- **Authentication**: Session-based with HTTP-only cookies and Google OAuth
-- **Payments**: Stripe integration with webhook handling
-- **Deployment**: Docker containers
-
-## What's Included
-
-Four main components:
-
-- **Backend API** - FastAPI application with authentication, multi-tenancy, and payments
-- **Frontend Dashboard** - SvelteKit interface with system admin, organization admin (B2B mode), and user dashboards
-- **Landing Page** - Marketing site template
-- **Database Schema** - PostgreSQL schema with migration system
-
-### Demo Application: AI Note Improver
-
-FastSvelte includes a complete **AI Note Improver** demo application that showcases the kit's capabilities:
-
-- **Full CRUD Operations** - Create, read, update, and delete notes
-- **AI Integration** - OpenAI-powered note organization and improvement
-- **Usage-Based Billing** - Token consumption tracking with plan-based limits
-- **Multi-tenant Architecture** - Organization-level quotas and permissions
-
-This demo application demonstrates how to build AI-powered SaaS features while maintaining proper authentication, authorization, and billing controls. **Replace this demo with your own core functionality** while keeping the underlying infrastructure.
-
----
-
-## Next Steps
-
-- **[Getting Started](getting-started.md)** - Complete setup guide with all configuration options
-- **[Development Guide](development.md)** - Development workflows and common tasks
-- **[Architecture Overview](architecture-overview.md)** - Understand how FastSvelte is built
-- **[Tutorials](tutorials.md)** - Learn to customize and extend your app
-- **[Integrations](integrations/index.md)** - Configure Stripe, SendGrid, OAuth, and more
-- **[Deployment](deployment/index.md)** - Deploy to Azure, Docker, or other platforms
-- **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
+- **[Guides](guides/project-setup.md)** — set up your project, develop, and ship
+- **[Features](features/authentication.md)** — auth, billing, AI, multi-tenancy, and more
+- **[Architecture](reference/architecture.md)** · **[Deployment](deployment/index.md)**

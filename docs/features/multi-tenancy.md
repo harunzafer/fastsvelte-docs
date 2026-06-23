@@ -21,7 +21,7 @@ In B2B mode, FastSvelte operates as a closed registration system where:
 When you run `uv run init.py` and select **B2B mode**, the script creates:
 
 1. A system administrator account (sys_admin)
-2. Sets `FS_APP_MODE=b2b` in your environment
+2. Sets `FS_MODE=b2b` in your environment
 
 ## The B2B Flow
 
@@ -111,17 +111,14 @@ The flow is the same in both development and production environments. The key di
 
 ## Configuration
 
-B2B mode is controlled by the `FS_APP_MODE` environment variable:
+B2B mode is controlled by the backend `FS_MODE` environment variable:
 
 ```bash
 # Backend (.env)
-FS_APP_MODE=b2b
-
-# Frontend (.env)
-PUBLIC_APP_MODE=b2b
+FS_MODE=b2b
 ```
 
-To switch modes, update these variables and restart your services.
+The frontend doesn't need a mode variable — it reads the mode from the backend's `/config` endpoint at runtime. Update `FS_MODE` and restart the backend.
 
 ## Common Workflows
 

@@ -46,6 +46,7 @@ theme:
 
   features:
     - navigation.indexes
+    - navigation.expand
     - navigation.top
     - navigation.instant
     - navigation.instant.progress
@@ -67,24 +68,42 @@ plugins:
 
         For the full documentation content concatenated into a single file, see [llms-full.txt](https://docs.fastsvelte.dev/llms-full.txt).
       sections:
-        Getting Started:
-          - index.md: FastSvelte documentation home — overview and what's included.
-          - getting-started.md: Prerequisites, clone, install, and run your first FastSvelte instance.
-          - development.md: Local development workflow, hot reload, and project structure.
-        Architecture:
-          - architecture-overview.md: Stack overview — FastAPI backend, SvelteKit SPA frontend, PostgreSQL, auth, billing, multi-tenancy.
-          - b2b-mode.md: Multi-tenant B2B mode — organizations, roles, invitations.
-        Tutorials:
-          - tutorials.md: Step-by-step tutorials covering CRUD APIs, SvelteKit SPA setup, form validation, and authentication.
-        Integrations:
-          - integrations/index.md: Overview of supported integrations.
-          - integrations/stripe.md: Stripe billing setup — products, subscriptions, webhooks.
+        Get Started:
+          - index.md: Quick start — what's included, prerequisites, setup, and core configuration.
+        Guides:
+          - guides/project-setup.md: What init.py configured, the env files, and team onboarding.
+          - guides/development-workflow.md: The DB to backend to frontend change loop and API client regen.
+          - guides/adding-a-feature.md: Add a new entity end-to-end (schema, repo, service, route, UI).
+          - guides/metering-a-custom-feature.md: Put an action behind a per-plan limit; optional credit top-up.
+          - guides/replacing-the-demo.md: Plan your app, build features, and remove the demo code.
+          - guides/orval.md: Type-safe TypeScript API client generated from the OpenAPI spec.
+          - guides/upgrading-dependencies.md: Dependabot policy and uv/npm upgrade workflows.
+          - guides/getting-updates.md: How to pull FastSvelte updates into your fork.
+        Features:
+          - features/authentication.md: Session auth, email verification, password reset, roles.
+          - features/google-oauth.md: Google OAuth social login setup and flow.
+          - features/billing.md: Stripe subscriptions, customer portal, and webhooks.
+          - features/plans-and-usage.md: Plan-defined per-feature limits and per-period usage metering.
+          - features/ai.md: LLM client interface, OpenAI setup, the sample copilot, and streaming.
+          - features/ai-billing.md: AI usage metering, token allotment, credit packs, and model pricing.
+          - features/multi-tenancy.md: B2B mode — organizations, roles, invitations.
+          - features/database.md: PostgreSQL schema, Sqitch migrations, and db_config.
+          - features/email.md: Transactional email via Resend, SendGrid, or Azure.
+          - features/landing-page.md: The included SEO-optimized SvelteKit landing template.
+          - features/seo.md: SEO metadata, sitemaps, and robots.
+          - features/admin-dashboards.md: Role-based admin and user dashboards.
+          - features/security.md: Argon2 passwords, hashed sessions, RBAC, CSRF, AI spend caps.
         Deployment:
-          - deployment/index.md: Deployment overview and platform comparison.
-          - deployment/*.md
-        Operations:
-          - getting-updates.md: How to pull FastSvelte updates into your fork.
-          - troubleshooting.md: Common issues and fixes.
+          - deployment/index.md: Deployment overview — five common setups and what every setup needs.
+          - deployment/railway.md: All-in-one deploy on Railway (API + Postgres + static).
+          - deployment/digitalocean.md: DigitalOcean App Platform — container + managed Postgres + static.
+          - deployment/fly-neon-vercel.md: Best-of-breed — API on Fly.io, Postgres on Neon, static on Vercel.
+          - deployment/azure.md: Azure — Container Apps + PostgreSQL Flexible Server + Static Web Apps.
+          - deployment/self-hosting.md: Self-host the whole stack with Docker Compose.
+        Reference:
+          - reference/configuration.md: Backend FS_ environment variables, environments, CORS, and cron.
+          - reference/architecture.md: Monorepo structure, layered backend, DI, request flow.
+          - reference/troubleshooting.md: Common issues and fixes.
 
 # Extensions
 markdown_extensions:
@@ -110,34 +129,41 @@ markdown_extensions:
 
 # Page tree
 nav:
-  - Home: index.md
-  - Getting Started: getting-started.md
-  - Development Guide: development.md
-  - Tutorials: tutorials.md
-  - Architecture Overview: architecture-overview.md
-  - B2B Mode: b2b-mode.md
-  - SEO: seo.md
-  - Integrations:
-      - integrations/index.md
-      - Stripe: integrations/stripe.md
+  - Quick Start: index.md
+  - Guides:
+      - Project Setup: guides/project-setup.md
+      - Development Workflow: guides/development-workflow.md
+      - Adding a Feature: guides/adding-a-feature.md
+      - Metering a Custom Feature: guides/metering-a-custom-feature.md
+      - Replacing the Demo: guides/replacing-the-demo.md
+      - Type-Safe API Client (Orval): guides/orval.md
+      - Upgrading Dependencies: guides/upgrading-dependencies.md
+      - Getting Updates: guides/getting-updates.md
+  - Features:
+      - Authentication: features/authentication.md
+      - Google OAuth: features/google-oauth.md
+      - Billing & Subscriptions: features/billing.md
+      - Plans & Usage: features/plans-and-usage.md
+      - AI Copilot: features/ai.md
+      - AI Usage & Credit Billing: features/ai-billing.md
+      - Multi-Tenancy (B2B): features/multi-tenancy.md
+      - Database: features/database.md
+      - Transactional Email: features/email.md
+      - Landing Page: features/landing-page.md
+      - SEO: features/seo.md
+      - Admin & User Dashboards: features/admin-dashboards.md
+      - Security: features/security.md
   - Deployment:
       - deployment/index.md
-      - Azure: deployment/azure.md
-      - DigitalOcean: deployment/digitalocean.md
       - Railway: deployment/railway.md
-      - Fly.io: deployment/fly.md
-      - AWS: deployment/aws.md
-      - Google Cloud: deployment/gcp.md
-      - Vercel: deployment/vercel.md
-      - Netlify: deployment/netlify.md
-      - Cloudflare Pages: deployment/cloudflare.md
-      - Neon: deployment/neon.md
-      - Supabase: deployment/supabase.md
-      - Render: deployment/render.md
-      - Coolify: deployment/coolify.md
-      - Docker Compose: deployment/docker-compose.md
-  - Getting Updates: getting-updates.md
-  - Troubleshooting: troubleshooting.md
+      - DigitalOcean: deployment/digitalocean.md
+      - Fly.io + Neon + Vercel: deployment/fly-neon-vercel.md
+      - Azure: deployment/azure.md
+      - Self-Hosting: deployment/self-hosting.md
+  - Reference:
+      - Configuration: reference/configuration.md
+      - Architecture: reference/architecture.md
+      - Troubleshooting: reference/troubleshooting.md
   - llms.txt: /llms.txt
 
 # Output directory for Vercel (will be overridden by build command)

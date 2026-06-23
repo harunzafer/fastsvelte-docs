@@ -1,77 +1,37 @@
 ---
-description: "Deploy FastSvelte to production - Simple guide to getting your SaaS application online with popular cloud platforms."
-keywords: "fastsvelte deployment, deploy saas, vercel deployment, azure deployment, docker deployment"
+description: "Deploy FastSvelte — API at api.yourdomain.com, app at app.yourdomain.com, landing at yourdomain.com, plus PostgreSQL. The most common, straightforward provider setups."
+keywords: "fastsvelte deployment, deploy fastapi sveltekit, railway, vercel, digitalocean, fly.io, render, docker, postgres hosting, self-hosting"
 ---
 
 # Deployment
 
-Ready to take your FastSvelte app live? Great! Deploying is simpler than you might think.
+FastSvelte deploys as three pieces plus a database. A typical production setup maps them to three URLs:
 
-## What You Need
+| Piece | What it is | Typical URL |
+|-------|-----------|-------------|
+| **API** | FastAPI backend (Docker container) | `api.yourdomain.com` |
+| **App** | SvelteKit SPA dashboard (static files) | `app.yourdomain.com` |
+| **Landing** | SvelteKit marketing site (static files) | `yourdomain.com` |
+| **Database** | PostgreSQL | managed or self-hosted |
 
-FastSvelte needs three things to run in production:
+Anything that can run a Docker container, serve static files, and provide PostgreSQL works — so you can **mix any providers you like**. Below are the most common, straightforward setups. Pick one and you're live.
 
-1. **A place for your backend** - Any platform that can run Docker containers (Azure, AWS, DigitalOcean, etc.)
-2. **A PostgreSQL database** - Many providers offer this (Neon, Supabase, Azure, AWS, etc.)
-3. **Hosting for your frontend** - Vercel, Netlify, Cloudflare Pages, or similar
+## Common setups
 
-That's it! Most modern cloud platforms make this straightforward with just a few setup steps.
+Five complete, end-to-end guides — pick one:
 
-## Choose Your Platform
+- **[Railway](railway.md)** — all-in-one (API + app + landing + Postgres). The simplest, near one-click.
+- **[DigitalOcean](digitalocean.md)** — App Platform: container + managed Postgres + static sites.
+- **[Fly.io + Neon + Vercel](fly-neon-vercel.md)** — best-of-breed: API on Fly, Postgres on Neon, app + landing on Vercel.
+- **[Azure](azure.md)** — Container Apps + PostgreSQL Flexible Server + Static Web Apps (enterprise).
+- **[Self-Hosting (Docker Compose)](self-hosting.md)** — all three + Postgres on one VPS.
 
-FastSvelte's flexible architecture means you're not locked into any specific platform—you can run it anywhere that supports Docker containers, PostgreSQL, and static file hosting. Below we've included guides for the most popular, affordable, and production-ready options.
+They reach the same outcome — point each provider at the right subdomain and set the URLs/CORS so the app can reach the API ([Configuration](../reference/configuration.md)).
 
-**Full-stack platforms (backend + database + frontend):**
+## Every setup needs
 
-- **[Azure](azure.md)** - Container Apps + PostgreSQL Flexible Server + Static Web Apps
-- **[DigitalOcean](digitalocean.md)** - App Platform + Managed Database + Static Sites
-- **[Railway](railway.md)** - Containers + PostgreSQL + Static Sites (simple, affordable)
-- **[Fly.io](fly.md)** - Containers + Postgres + Static Sites
-- **[AWS](aws.md)** - ECS/Fargate + RDS + S3/CloudFront
-- **[Google Cloud](gcp.md)** - Cloud Run + Cloud SQL + Cloud Storage
-
-**Frontend-only platforms (pair with above for backend):**
-
-- **[Vercel](vercel.md)** - Fast frontend deployment
-- **[Netlify](netlify.md)** - Frontend with great DX
-- **[Cloudflare Pages](cloudflare.md)** - Global edge deployment
-
-**Affordable PostgreSQL databases (pair with any platform):**
-
-- **[Neon](neon.md)** - Serverless Postgres with free tier
-- **[Supabase](supabase.md)** - Postgres + extras, generous free tier
-- **[Railway](railway.md)** - Simple Postgres hosting
-- **[Render](render.md)** - Managed Postgres from $7/month
-
-**Self-hosted platforms (run on your own server):**
-
-- **[Coolify](coolify.md)** - Open-source PaaS (like your own Heroku)
-- **[Docker Compose](docker-compose.md)** - Manual container orchestration
-
-## Quick Overview
-
-Here's what happens when you deploy:
-
-```
-Your Users → Frontend (Vercel/Netlify) → Backend API (Container) → Database (PostgreSQL)
-```
-
-The frontend is just HTML/CSS/JS files hosted anywhere. It talks to your backend API, which connects to your database.
-
-## Security Checklist
-
-Before going live:
-
-- [ ] Use strong passwords for database and admin accounts
-- [ ] Set proper CORS origins (your actual domain, not `*`)
-- [ ] Use HTTPS everywhere (usually automatic with modern platforms)
-- [ ] Don't commit secrets to git - use environment variables
-- [ ] Enable database backups
-
-Platform guides include specific security recommendations.
-
-## Alternative: Run on Your Own Server
-
-You can also deploy FastSvelte on a traditional VPS or bare metal server using Docker Compose or directly with Python/Node.js, though this requires DevOps knowledge. FastSvelte includes a `docker-compose.yml` you can use as a starting point.
-
-**Note:** We recommend cloud platforms for most users - they handle scaling, backups, and security updates automatically.
+- **Environment variables** — backend `FS_*` (see [Configuration](../reference/configuration.md)); the frontend and landing use `PUBLIC_*` (e.g. `PUBLIC_API_BASE_URL`).
+- **A PostgreSQL database** — put its connection string in `FS_DB_URL`, then run migrations (`./sqitch.sh <env> deploy`).
+- **The Stripe webhook** — point it at `https://api.yourdomain.com/webhooks/stripe` (see [Billing & Subscriptions](../features/billing.md)).
+- **HTTPS** — most platforms provision SSL automatically; when self-hosting, terminate TLS at your reverse proxy.
+- **A production pass** — review the [Security](../features/security.md) checklist before launch.

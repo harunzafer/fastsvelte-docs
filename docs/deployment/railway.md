@@ -1,59 +1,40 @@
 ---
-description: "Deploy FastSvelte on Railway - Simple, affordable full-stack deployment with containers, PostgreSQL, and static sites."
-keywords: "railway deployment, railway postgres, railway docker, fastsvelte railway"
+description: "Deploy FastSvelte end-to-end on Railway — the FastAPI backend, PostgreSQL, and the SvelteKit app + landing, with custom domains."
+keywords: "deploy fastsvelte railway, railway fastapi, railway postgres, railway sveltekit, railway docker deploy"
 ---
 
 # Deploy to Railway
 
-Deploy FastSvelte on Railway - one of the simplest and most affordable platforms for indie developers and startups.
+Railway is the simplest all-in-one path: it runs your FastAPI container, a managed PostgreSQL, and the static app + landing from one project, redeploying on every git push.
 
-## What You'll Use
+**Outcome:** API at `api.yourdomain.com`, app at `app.yourdomain.com`, landing at `yourdomain.com`.
 
-- **Railway Services** - Deploy your FastAPI backend container
-- **Railway PostgreSQL** - Managed PostgreSQL database
-- **Railway Static Sites** - Host your frontend (or use Vercel/Netlify)
+## 1. Create the project + database
 
-## Cost Estimate
+1. Create a [Railway](https://railway.app) project from your repo — it detects `backend/Dockerfile`.
+2. Add a **PostgreSQL** service (New → Database → PostgreSQL); Railway provisions its connection string.
 
-Railway uses usage-based pricing:
-- **Free trial:** $5 credit/month
-- **Pro plan:** $20/month for $20 in usage credits
-- Typical small app: ~$10-15/month actual usage
+## 2. Deploy the backend (API)
 
-## Why Railway?
+1. In the backend service → **Variables**, set the FastSvelte env (full list in [Configuration](../reference/configuration.md)):
+    - `FS_DB_URL` — reference the Postgres service's connection string
+    - `FS_ENVIRONMENT=prod`, `FS_BASE_API_URL=https://api.yourdomain.com`, `FS_BASE_WEB_URL=https://app.yourdomain.com`
+    - `FS_JWT_SECRET_KEY`, `FS_CRON_SECRET`, plus Stripe/email keys as needed
+2. Run migrations once against the prod database — `./sqitch.sh prod deploy` (with your prod sqitch target pointed at `FS_DB_URL`), or from a one-off Railway shell.
+3. Under **Settings → Networking**, add the custom domain `api.yourdomain.com`.
 
-- **Super simple** - Deploy with one command
-- **Affordable** - Pay only for what you use
-- **Great DX** - Beautiful dashboard, easy to use
-- **Fast deploys** - Git push to deploy
-- **All-in-one** - Backend, database, and frontend in one place
+## 3. Deploy the app + landing (static)
 
-## Deployment Guide
+`frontend/` and `landing/` are static SvelteKit builds. Add a static service for each that runs `npm install && npm run build` and serves the build output:
 
-**Coming soon!** This guide is under development.
+- Set `PUBLIC_API_BASE_URL=https://api.yourdomain.com` (and any other `PUBLIC_*`) before the build.
+- Attach `app.yourdomain.com` to the frontend and `yourdomain.com` to the landing.
 
-In the meantime, Railway has excellent documentation:
-- [Railway Documentation](https://docs.railway.app/)
-- [Deploy from GitHub](https://docs.railway.app/guides/github-integration)
-- [PostgreSQL Database](https://docs.railway.app/databases/postgresql)
+Prefer Vercel for the static sites? The Vercel steps in [Fly.io + Neon + Vercel](fly-neon-vercel.md) apply to any backend host.
 
-## Quick Start
+## 4. Wire it together
 
-1. Connect your GitHub repository to Railway
-2. Railway auto-detects Dockerfile and deploys backend
-3. Add PostgreSQL database with one click
-4. Deploy frontend as static site or use Vercel
-5. Set environment variables in Railway dashboard
-
-## Key Features
-
-- Automatic HTTPS/SSL
-- GitHub integration for CI/CD
-- Zero-downtime deployments
-- Built-in observability
-- Easy rollbacks
-- Template marketplace
-
----
-
-Want to contribute this guide? [Open a PR](https://github.com/harunzafer/fastsvelte) with your deployment experience!
+- Point DNS for `api`, `app`, and the apex at the Railway domains.
+- Confirm `FS_BASE_API_URL` / `FS_BASE_WEB_URL` match the live URLs so CORS and cookies work ([Configuration](../reference/configuration.md)).
+- Add the Stripe webhook at `https://api.yourdomain.com/webhooks/stripe` ([Billing & Subscriptions](../features/billing.md)).
+- Review the [Security](../features/security.md) checklist before launch.

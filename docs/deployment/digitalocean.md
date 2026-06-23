@@ -1,60 +1,35 @@
 ---
-description: "Deploy FastSvelte on DigitalOcean - App Platform for containers, Managed Databases for PostgreSQL, and simple static site hosting."
-keywords: "digitalocean deployment, digitalocean app platform, digitalocean managed database, fastsvelte digitalocean"
+description: "Deploy FastSvelte on DigitalOcean App Platform — FastAPI container, managed PostgreSQL, and the SvelteKit app + landing as static sites, with custom domains."
+keywords: "deploy fastsvelte digitalocean, app platform fastapi, do managed postgres, digitalocean sveltekit"
 ---
 
 # Deploy to DigitalOcean
 
-Deploy FastSvelte using DigitalOcean's App Platform and Managed Databases. Known for simplicity and developer-friendly pricing.
+DigitalOcean **App Platform** runs all three pieces in one app — the FastAPI container, a managed PostgreSQL, and the static app + landing. (Prefer a single server you control? See [Self-Hosting](self-hosting.md) for a droplet + Docker Compose.)
 
-## What You'll Use
+**Outcome:** API at `api.yourdomain.com`, app at `app.yourdomain.com`, landing at `yourdomain.com`.
 
-- **App Platform** - Deploy your FastAPI backend container
-- **Managed Database (PostgreSQL)** - Hosted PostgreSQL database
-- **App Platform Static Sites** - Host your SvelteKit frontend and landing
+## 1. Database
 
-## Cost Estimate
+Create a **Managed PostgreSQL** database (Databases → Create) and copy its connection string for `FS_DB_URL`.
 
-For a small production app:
-- App Platform (Basic): $5-12/month
-- Managed Database (PostgreSQL): $15/month
-- Static Sites: Free
+## 2. Backend (API)
 
-**Total:** ~$20-27/month
+1. Create an App from your repo and add a **Service** built from `backend/Dockerfile`.
+2. Set environment variables ([Configuration](../reference/configuration.md)):
+    - `FS_DB_URL` — the managed database connection string
+    - `FS_ENVIRONMENT=prod`, `FS_BASE_API_URL=https://api.yourdomain.com`, `FS_BASE_WEB_URL=https://app.yourdomain.com`
+    - `FS_JWT_SECRET_KEY`, `FS_CRON_SECRET`, plus Stripe/email keys
+3. Run migrations against the managed DB: `./sqitch.sh prod deploy` (from a console or your machine, with the prod `FS_DB_URL`).
+4. Add the domain `api.yourdomain.com` to the service.
 
-## Why DigitalOcean?
+## 3. App + landing (static sites)
 
-- Simple, predictable pricing
-- Great documentation
-- Fast deployment
-- Good performance for the price
-- Excellent for small to medium apps
+Add two **Static Site** components from the same repo:
 
-## Deployment Guide
+- **frontend** (`frontend/`) — build `npm run build`; env `PUBLIC_API_BASE_URL=https://api.yourdomain.com`; domain `app.yourdomain.com`.
+- **landing** (`landing/`) — build `npm run build`; domain `yourdomain.com`.
 
-**Coming soon!** This guide is under development.
+## 4. Wire it together
 
-In the meantime, DigitalOcean has excellent documentation:
-- [App Platform Overview](https://docs.digitalocean.com/products/app-platform/)
-- [Managed Databases](https://docs.digitalocean.com/products/databases/)
-
-## What You'll Need
-
-1. **Backend:** Deploy Docker container via App Platform (auto-builds from Git)
-2. **Database:** Create PostgreSQL Managed Database (1GB RAM minimum)
-3. **Frontend:** Deploy static sites via App Platform (auto-builds from Git)
-
-Connect your GitHub repository and DigitalOcean handles the rest!
-
-## Key Features
-
-- Automatic HTTPS/SSL
-- Built-in CI/CD from GitHub
-- Easy environment variable management
-- Database connection pooling included
-- Automatic database backups
-- Simple scaling options
-
----
-
-Want to contribute this guide? [Open a PR](https://github.com/harunzafer/fastsvelte) with your deployment experience!
+Point DNS at the App Platform domains, confirm the `FS_BASE_*` URLs match the live ones, add the Stripe webhook at `https://api.yourdomain.com/webhooks/stripe` ([Billing & Subscriptions](../features/billing.md)), and run the [Security](../features/security.md) checklist.

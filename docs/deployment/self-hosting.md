@@ -196,7 +196,7 @@ docker stats
 
 ## Alternative: Use Coolify
 
-If you want a GUI for managing Docker deployments, consider [Coolify](coolify.md) - it provides a web interface for Docker Compose deployments.
+If you want a GUI for managing Docker deployments, consider [Coolify](https://coolify.io) — a self-hostable web interface for Docker Compose deployments.
 
 ## Security Considerations
 

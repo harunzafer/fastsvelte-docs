@@ -33,7 +33,7 @@ FastSvelte intentionally avoids many popular libraries and frameworks that other
 
 ## 2. End-to-End Request Flow
 
-Let's trace what happens when a user creates a project in your SaaS app. (This example follows the [Adding a New Entity tutorial](tutorials.md#adding-a-new-entity-end-to-end) where you build a project management feature.)
+Let's trace what happens when a user creates a project in your SaaS app. (This example follows the [Adding a New Entity tutorial](../guides/adding-a-feature.md#adding-a-new-entity-end-to-end) where you build a project management feature.)
 
 ### High-Level Flow
 
@@ -172,62 +172,9 @@ This centralization provides several benefits. Object lifecycles (singleton vs f
 
 ## 4. Database: Multi-Tenant PostgreSQL
 
-FastSvelte uses a multi-tenant architecture where all data is scoped to organizations. Every user belongs to at least one organization, and all business data (projects, notes, etc.) is associated with an organization, not individual users. This design supports both individual users and teams without changing the underlying data model.
+All data is scoped to an **organization** (the tenant boundary), so the schema serves both individual users and teams without changing. Migrations are plain SQL managed with **Sqitch** — no ORM. The mode (`b2c` / `b2b`) is set by `FS_MODE` and changes only application logic, not the schema.
 
-**Core entities:**
-
-- `user` - Individual accounts with email/password authentication
-- `organization` - The tenant boundary - all business data belongs to an organization
-- `role` - Permission level: `member` (basic access), `org_admin` (manage organization), `sys_admin` (platform-wide access)
-- `session` - Server-side sessions for authentication
-- `plan` - Subscription tiers (free, pro, enterprise, etc.)
-- `organization_plan` - Links organizations to their current subscription plan
-
-**B2C mode** (individual users):
-
-Public registration is enabled. When a user signs up, they automatically get their own organization. Each user operates independently with their personal workspace. User invitations and organization management features are disabled in this mode.
-
-**B2B mode** (team collaboration):
-
-Public registration is disabled. System administrators create organizations and assign an organization admin. The organization admin can then invite teammates via email. All members share access to the same data within that organization. Users can belong to multiple organizations (for example, a contractor working with several clients).
-
-!!! info "Future Enhancement"
-Self-service organization creation (allowing users to create teams from the signup page) is being considered for a future release.
-
-The mode is controlled by `FS_MODE` environment variable (`b2b` or `b2c`), which affects signup flow and default UI behavior. The database schema remains identical - only the application logic changes. For complete details on B2B mode, see [B2B Mode](b2b-mode.md).
-
-### Database migrations with Sqitch
-
-FastSvelte uses Sqitch for database schema versioning. Because migrations are plain SQL files in version control, they're reviewed alongside code changes in pull requests.
-
-**Why Sqitch?** Most migration tools are tied to a specific ORM or language. Sqitch is language-agnostic and works with raw SQL, making it perfect for FastSvelte's minimal dependencies philosophy. Migrations are explicit SQL files that you can review, optimize, and understand without learning an abstraction layer.
-
-Create a new migration:
-
-```bash
-cd backend/db
-sqitch add add_feature -n "Add feature table"
-```
-
-This creates three SQL files in the `backend/db/` directory:
-
-- `deploy/add_feature.sql` - How to apply the change
-- `revert/add_feature.sql` - How to undo it
-- `verify/add_feature.sql` - How to verify it worked
-
-Deploy migrations:
-
-```bash
-./sqitch.sh dev deploy
-```
-
-!!! info "Why the sqitch.sh wrapper?"
-The `sqitch.sh` script wraps the native Sqitch command to add FastSvelte-specific features:
-
-    - **Multi-environment support**: Automatically selects the correct database URL based on the stage (dev, beta, gamma, prod, test)
-    - **Safety checks**: Validates that all migration files include `BEGIN;` and `COMMIT;` to ensure transactional integrity
-    - **Revert protection**: Requires `--to` flag for revert operations to prevent accidental complete rollbacks
-    - **Environment loading**: Loads database URLs from `.env` files for each environment
+See **[Database](../features/database.md)** for the schema, `db_config`, and the Sqitch workflow, and **[Multi-Tenancy](../features/multi-tenancy.md)** for the organization, role, and invitation model.
 
 ---
 
@@ -261,53 +208,7 @@ src/
 
 ### Auto-generated API client
 
-When you change backend models or routes:
-
-```bash
-cd frontend
-npm run generate  # Reads OpenAPI spec, generates TypeScript client
-```
-
-Now you get compile-time type safety:
-
-```typescript
-import { createNote } from "$lib/api/gen/notes";
-import type { CreateNoteRequest, NoteResponse } from "$lib/api/gen/model";
-
-// TypeScript knows the request and response types
-const note: NoteResponse = await createNote({
-  title: "My Note",
-  content: "Note content",
-});
-```
-
-Here's how it works:
-
-1. Define Pydantic models and routes in the backend:
-
-```python
-class CreateNoteRequest(BaseModel):
-    title: str
-    content: str | None
-
-class NoteResponse(BaseModel):
-    id: int
-    title: str
-    content: str | None
-
-@router.post("", response_model=NoteResponse, operation_id="createNote")
-async def create_note(data: CreateNoteRequest, ...):
-    # The response_model and operation_id are crucial:
-    # - response_model defines the return type in OpenAPI spec
-    # - operation_id becomes the TypeScript function name
-    ...
-```
-
-2. FastAPI auto-generates an OpenAPI spec from the Pydantic models and route decorators
-3. Orval reads the spec and generates TypeScript types and functions
-4. Import and use the generated functions with full type safety
-
-Change the backend model or route → Run `npm run generate` → TypeScript compiler catches any breaking changes in the frontend.
+The frontend's TypeScript API client is generated from the backend's OpenAPI spec, so a backend change surfaces as a compile-time error in the frontend. See **[Type-Safe API Client (Orval)](../guides/orval.md)**.
 
 ---
 
@@ -333,13 +234,14 @@ Sessions expire after 24 hours (configurable). The backend stores hashed session
 
 ### Role-based access control
 
-Three roles:
+Four roles, ordered by precedence (`readonly` < `member` < `org_admin` < `sys_admin`):
 
+- **readonly** - View-only access
 - **member** - Basic user (can use the app)
 - **org_admin** - Manage organization (invite users, change settings)
 - **sys_admin** - Full system access (manage all orgs, see analytics)
 
-Protect routes with role checks:
+See [Authentication](../features/authentication.md) and [Security](../features/security.md) for the full model. Protect routes with role checks:
 
 ```python
 @router.get("/admin/users")
@@ -442,7 +344,7 @@ See [Section 3](#3-backend-layered-architecture) for why services shouldn't know
 
 **Next Steps:**
 
-- [Development Guide](development.md) - Start building
-- [B2B Mode](b2b-mode.md) - Configure team collaboration features
-- [Integrations](integrations/index.md) - Add Stripe, SendGrid, and OAuth
+- [Development Guide](../guides/development-workflow.md) - Start building
+- [B2B Mode](../features/multi-tenancy.md) - Configure team collaboration features
+- [Integrations](../features/authentication.md) - Add Stripe, SendGrid, and OAuth
 - [Troubleshooting](troubleshooting.md) - Fix issues

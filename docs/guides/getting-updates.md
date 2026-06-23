@@ -123,5 +123,5 @@ git push -u origin main
 ---
 
 **Next Steps:**
-- [Development Guide](development.md) - Build your application
-- [Deployment](deployment/index.md) - Deploy to production
+- [Development Guide](development-workflow.md) - Build your application
+- [Deployment](../deployment/index.md) - Deploy to production

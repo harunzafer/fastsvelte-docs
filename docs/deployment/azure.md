@@ -25,7 +25,7 @@ Deploy FastSvelte using Azure's modern container and serverless services. This g
 
 For a small production app:
 - Container Apps: ~$15-30/month
-- PostgreSQL Flexible Server: ~$50-100/month (can use [Neon](neon.md) for ~$20/month instead)
+- PostgreSQL Flexible Server: ~$50-100/month (can use [Neon](https://neon.tech) for ~$20/month instead)
 - Static Web Apps: Free tier available, ~$10/month for standard
 - Container Registry: ~$5/month
 
@@ -88,7 +88,7 @@ az postgres flexible-server db create \
   --database-name fastsvelte
 ```
 
-**Alternative:** Use [Neon](neon.md) or [Supabase](supabase.md) for a more affordable managed Postgres option.
+**Alternative:** Use [Neon](https://neon.tech) or [Supabase](https://supabase.com) for a more affordable managed Postgres option.
 
 ### 4. Run Database Migrations
 
