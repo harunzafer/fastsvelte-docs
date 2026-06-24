@@ -28,7 +28,7 @@ cd frontend && npm run dev
 
 !!! info "Prerequisites"
 
-    You'll need [uv](https://docs.astral.sh/uv/#installation), **Node.js 22+**, [Sqitch](https://sqitch.org/download/), and **Docker** (running). `init.py` checks all four first and exits with install instructions if any are missing — so you can just run it and fix what it flags.
+    You'll need [uv](https://docs.astral.sh/uv/#installation) to run `init.py` in the first place, plus **Node.js 22+**, [Sqitch](https://sqitch.org/download/), and **Docker** (running). `init.py` checks those last three first and exits with install instructions if any are missing — so once `uv` is in place you can just run it and fix what it flags.
 
 Open **[localhost:5173](http://localhost:5173)** and log in with the admin you created. The backend and interactive API docs are at [localhost:8000/docs](http://localhost:8000/docs); the landing template runs at [localhost:5174](http://localhost:5174).
 
