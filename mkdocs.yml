@@ -75,6 +75,7 @@ plugins:
           - guides/development-workflow.md: The DB to backend to frontend change loop and API client regen.
           - guides/adding-a-feature.md: Add a new entity end-to-end (schema, repo, service, route, UI).
           - guides/metering-a-custom-feature.md: Put an action behind a per-plan limit; optional credit top-up.
+          - guides/swapping-llm-provider.md: Swap OpenAI for Claude, Gemini, or LiteLLM via the LLMClient seam.
           - guides/replacing-the-demo.md: Plan your app, build features, and remove the demo code.
           - guides/orval.md: Type-safe TypeScript API client generated from the OpenAPI spec.
           - guides/upgrading-dependencies.md: Dependabot policy and uv/npm upgrade workflows.
@@ -135,6 +136,7 @@ nav:
       - Development Workflow: guides/development-workflow.md
       - Adding a Feature: guides/adding-a-feature.md
       - Metering a Custom Feature: guides/metering-a-custom-feature.md
+      - Swapping the LLM Provider: guides/swapping-llm-provider.md
       - Replacing the Demo: guides/replacing-the-demo.md
       - Type-Safe API Client (Orval): guides/orval.md
       - Upgrading Dependencies: guides/upgrading-dependencies.md

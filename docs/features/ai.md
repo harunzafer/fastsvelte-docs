@@ -80,7 +80,7 @@ Billing is not optional plumbing you add later — route every call through `AiU
 
 ## Using a different provider
 
-OpenAI is the shipped implementation. Claude and Gemini are **documented recipes**, not code in the kit: implement the `LLMClient` interface against the provider's SDK (its own structured-output and streaming APIs, mapping the final usage into `TokenUsage`), then point the `openai_client` provider in `container.py` at your new class. No route or service code changes.
+OpenAI is the shipped implementation. To swap it, write one class implementing the `LLMClient` interface against your provider's SDK and point `container.py` at it — no route, service, billing, or UI code changes, since that seam is all the rest of the backend depends on. See **[Swapping the LLM Provider](../guides/swapping-llm-provider.md)** for a complete, drop-in Claude (Anthropic) recipe and the Gemini / LiteLLM pattern.
 
 ## Next steps
 
