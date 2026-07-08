@@ -33,7 +33,7 @@ Pass `--dry-run` to preview without making changes. In development the email pro
 2. **Teammates clone and configure:**
 
     - Clone your repository (not the FastSvelte template).
-    - Install the [prerequisites](../index.md) (uv, Node.js 22+, Sqitch, Docker).
+    - Install the [prerequisites](../index.md) (uv, Node.js 22+, Docker).
     - Create `.env` files by copying each `.env.example` (`backend/`, `frontend/`, `landing/`, `backend/db/`).
     - Start the database: `docker compose -f backend/docker-compose.yml up db -d`
     - Run migrations: `cd backend/db && ./sqitch.sh dev deploy`

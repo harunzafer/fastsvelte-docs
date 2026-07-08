@@ -31,7 +31,7 @@ Create a migration:
 
 ```bash
 cd backend/db
-sqitch add add_feature -n "Add feature table"
+./sqitch.sh add add_feature -n "Add feature table"
 ```
 
 This creates three files:
@@ -46,7 +46,7 @@ Deploy:
 ./sqitch.sh dev deploy
 ```
 
-The `sqitch.sh` wrapper adds FastSvelte-specific safety: per-environment database URLs (dev/beta/gamma/prod/test), a check that every migration is wrapped in `BEGIN;`/`COMMIT;`, revert protection (requires `--to`), and `.env` loading per environment.
+The `sqitch.sh` wrapper runs Sqitch via the official Docker image (no local Sqitch install needed) and adds FastSvelte-specific safety: per-environment database URLs (dev/beta/gamma/prod/test), a check that every migration is wrapped in `BEGIN;`/`COMMIT;`, revert protection (requires `--to`), and `.env` loading per environment.
 
 ### Why Sqitch and raw SQL?
 
