@@ -20,7 +20,7 @@ Railway is the simplest all-in-one path: it runs your FastAPI container, a manag
     - `FS_DB_URL` — reference the Postgres service's connection string
     - `FS_ENVIRONMENT=prod`, `FS_BASE_API_URL=https://api.yourdomain.com`, `FS_BASE_WEB_URL=https://app.yourdomain.com`
     - `FS_JWT_SECRET_KEY`, `FS_CRON_SECRET`, plus Stripe/email keys as needed
-2. Run migrations once against the prod database — `./sqitch.sh prod deploy` (with your prod sqitch target pointed at `FS_DB_URL`), or from a one-off Railway shell.
+2. Run migrations once against the prod database with `./sqitch.sh prod deploy` (prod Sqitch target pointed at `FS_DB_URL`), from your local machine or CI.
 3. Under **Settings → Networking**, add the custom domain `api.yourdomain.com`.
 
 ## 3. Deploy the app + landing (static)

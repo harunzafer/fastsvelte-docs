@@ -25,7 +25,7 @@ First, create a new migration for the projects table.
 
 ```bash
 cd backend/db
-sqitch add projects -n "Add projects table"
+./sqitch.sh add projects -n "Add projects table"
 ```
 
 Edit the generated migration file `backend/db/deploy/projects.sql`:

@@ -42,7 +42,7 @@ rm -rf src/routes/(protected)/notes
 
 ```bash
 cd backend/db
-sqitch add remove_note_table -n "Remove note demo table"
+./sqitch.sh add remove_note_table -n "Remove note demo table"
 ```
 
 Edit `deploy/remove_note_table.sql`:

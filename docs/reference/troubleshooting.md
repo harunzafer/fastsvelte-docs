@@ -20,7 +20,6 @@ Common issues and solutions for [FastSvelte](https://fastsvelte.dev) development
 - **Python 3.12+**: https://www.python.org/downloads/
 - **Docker**: https://docs.docker.com/get-docker/
 - **Node.js 22+**: https://nodejs.org/
-- **Sqitch**: https://sqitch.org/download/
 
 **Init script permission denied**
 

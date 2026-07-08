@@ -11,7 +11,7 @@ After this guide you can make a change across the stack and run the app. Work in
 
 ```bash
 cd backend/db
-sqitch add feature_name -n "Description"
+./sqitch.sh add feature_name -n "Description"
 # Edit the generated deploy/, revert/, verify/ SQL files
 ./sqitch.sh dev deploy
 ```
