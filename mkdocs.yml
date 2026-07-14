@@ -103,7 +103,7 @@ plugins:
           - deployment/self-hosting.md: Self-host the whole stack with Docker Compose.
         Reference:
           - reference/configuration.md: Backend FS_ environment variables, environments, CORS, and cron.
-          - reference/architecture.md: Monorepo structure, layered backend, DI, request flow.
+          - reference/architecture.md: Monorepo structure, layered backend, DI, request flow, frontend data loading.
           - reference/troubleshooting.md: Common issues and fixes.
 
 # Extensions

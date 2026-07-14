@@ -210,6 +210,70 @@ src/
 
 The frontend's TypeScript API client is generated from the backend's OpenAPI spec, so a backend change surfaces as a compile-time error in the frontend. See **[Type-Safe API Client (Orval)](../guides/orval.md)**.
 
+### Data loading: `+page.ts` vs `onMount`
+
+Pages fetch their data in a `+page.ts` **load function**, not in `onMount`. The load starts as soon as you navigate, so the page appears immediately instead of mounting empty and then filling itself in.
+
+There are two flavours, and one exception.
+
+| Page type | Pattern | Example to copy |
+|---|---|---|
+| Lists, tables, dashboards, detail views | `+page.ts`, **streamed** (return the promise, do not `await` it) | `routes/(protected)/notes/+page.ts` |
+| Editable forms | `+page.ts`, **awaited** (return the finished data) | `routes/(protected)/settings/+page.ts` |
+| Polling, WebSockets, upload progress | `onMount` in the component, with cleanup | `routes/(protected)/admin/health/+page.svelte` |
+
+**Streamed** means the load returns a promise it never awaited:
+
+```ts
+export const load: PageLoad = async ({ depends }) => {
+	depends(KEYS.notes);
+	return { notes: listNotes() }; // note: no await
+};
+```
+
+The page unwraps it with `{#await}`, which puts the loading, loaded and failed states in one place. You do not write a `loading` flag:
+
+```svelte
+{#await data.notes}
+	<NotesSkeleton />
+{:then notes}
+	<NotesGrid {notes} />
+{:catch}
+	<p>Failed to load notes.</p>
+{/await}
+```
+
+**Awaited** is for forms, and the reason is dirty-detection. When the load hands over finished data, `data` *is* the saved state, so "does this form have unsaved changes?" is just a comparison against it:
+
+```ts
+let theme = $state(untrack(() => data.theme)); // seeded once, then follows the user
+const hasChanges = $derived(theme !== data.theme);
+```
+
+Do it the other way and you end up maintaining a second `originalTheme` copy by hand, and resyncing it after every save.
+
+**Two rules that keep this working:**
+
+1. **Never copy load data into `$state`** on a read-only page. The copy goes stale the moment the load re-runs. Read `data` directly. Forms are the exception, and only for the fields being edited, as above.
+2. **Refresh by re-running the load, not by refetching.** After a mutation, call `invalidate()` with the scope the load claimed via `depends()`:
+
+```ts
+await deleteNote(id);
+await invalidate(KEYS.notes); // re-runs the load, which refetches the list
+```
+
+Every scope in the app is named in `lib/invalidation-keys.ts`. They live in one file because a mistyped scope fails silently: `invalidate('app:note')` matches nothing, refreshes nothing, and leaves stale data on screen without an error.
+
+!!! note "Why `depends()` is needed at all"
+
+    SvelteKit can track fetches for you, but only when they go through the `fetch` it passes into the load function. Our Orval client uses its own, so each load names its scope explicitly with `depends()` and mutations invalidate it by that name.
+
+**Why not `onMount`?** It only runs after the component mounts, so navigation completes, the page renders empty, and *then* the request starts. You also hand-roll `loading` and `error` flags, re-fetching when a route parameter changes, and cancelling requests that a newer one has superseded. Load functions do all of that for you.
+
+Keep `onMount` for what is genuinely tied to the component's lifetime: a timer, a socket, an event listener you have to remove. `admin/health` polls on an interval, so it is the one page that owns its data in local state, and it is commented to say so.
+
+Background reading: [when to use load functions and onMount](https://turtledev.io/blog/sveltekit-spa-when-to-use-load-functions-and-onmount) and [load functions vs onMount](https://turtledev.io/blog/sveltekit-spa-load-functions-vs-onmount).
+
 ---
 
 ## 6. Authentication & Security
