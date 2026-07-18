@@ -1,6 +1,6 @@
 ---
-description: "FastSvelte security defaults — Argon2 password hashing, hashed session tokens, role-based access control, OAuth CSRF protection, AI spend caps, and per-environment cookie and CORS hardening."
-keywords: "fastsvelte security, argon2, session security, rbac, csrf, cors, secure cookies, ai budget cap, saas security"
+description: "FastSvelte security defaults — Argon2 password hashing, hashed session tokens, role-based access control, OAuth CSRF protection, AI spend caps, per-IP rate limiting, and per-environment cookie and CORS hardening."
+keywords: "fastsvelte security, argon2, session security, rbac, csrf, cors, secure cookies, ai budget cap, rate limiting, saas security"
 ---
 
 # Security
@@ -36,9 +36,53 @@ AI usage is **hard-capped by default**: when an organization exhausts its allotm
 
 Allowed origins are configured per environment in `backend/app/config/settings.py` and tighten in production. Accounts must verify their email before they can log in.
 
+## Rate limiting
+
+The abuse-prone public endpoints are rate limited per client IP, so one source can't hammer them:
+
+| Endpoint | Limit |
+|----------|-------|
+| `POST /auth/login` | 5 / 15 min |
+| `POST /auth/signup`, `POST /auth/signup-org` | 3 / hour |
+| `POST /password/forgot` | 3 / hour |
+| `POST /auth/resend-verification` | 10 / min |
+
+The priority is the endpoints that **send email to a user-supplied address** (signup, forgot-password, resend-verification): left open they let an attacker burn your email spend and sender reputation regardless of how much traffic you have. Login is capped against credential stuffing. A breach returns the standard `ErrorResponse` with a `Retry-After` header.
+
+To rate limit another route, add the dependency to it:
+
+```python
+from fastapi import Depends
+from app.util.rate_limit import rate_limit
+
+@router.post("/expensive", dependencies=[Depends(rate_limit("10/minute"))])
+```
+
+### Storage (read before scaling)
+
+Counters live in **process memory by default** (`FS_RATE_LIMIT_STORAGE_URI=async+memory://`). The shipped container runs a single process, so this is correct for **one instance**. But each instance keeps its own counters, so if you run **more than one instance** (horizontal scaling / replicas behind a load balancer) the effective limit multiplies by the number of instances. For a real limit across instances, point it at a shared store:
+
+```
+FS_RATE_LIMIT_STORAGE_URI=async+redis://your-redis-host:6379/0
+```
+
+Async Redis needs the `coredis` package (`uv add coredis`).
+
+### Behind a proxy
+
+The limiter reads the client IP from `X-Forwarded-For`, which hosting platforms set for you. If you'd rather rate limit at the edge, a reverse proxy like nginx can do it too. See its [`limit_req` docs](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html).
+
+### Deliberately left out
+
+Kept out to stay lean; add if your threat model calls for it:
+
+- **Per-account login limiting** (keying login on the target email, not just the IP) defends a distributed attack against one account. Worth adding once you have accounts worth attacking.
+- **The AI endpoint** is authenticated, so it's not a public abuse surface, and it's already hard-capped by the AI spend protection above. It gets no separate HTTP limit.
+- **Reset and verify token endpoints** rely on high-entropy tokens rather than a request limit.
+
 ## Not included (add as needed)
 
-To stay lean, FastSvelte does **not** bundle rate limiting or security-header middleware (CSP/HSTS). Add them when your threat model calls for it — e.g. a rate-limiting dependency in front of auth/AI endpoints, and a middleware that sets security headers.
+To stay lean, FastSvelte does **not** bundle security-header middleware (CSP/HSTS). Add it when your threat model calls for it, e.g. a middleware that sets security headers.
 
 ## Production checklist
 

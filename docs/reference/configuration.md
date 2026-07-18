@@ -35,6 +35,15 @@ FS_CRON_SECRET="your-secure-cron-secret"
 FS_CRON_SESSION_RETENTION_DAYS=7
 ```
 
+## Rate limiting
+
+Auth and email endpoints are rate limited out of the box (see [Security](../features/security.md#rate-limiting)). Each container is a single process, so the in-memory default is fine for one instance; point at a shared store if you run multiple instances so the limit holds across them:
+
+```bash
+FS_RATE_LIMIT_STORAGE_URI="async+memory://"              # default; per-instance counters
+# FS_RATE_LIMIT_STORAGE_URI="async+redis://host:6379/0"  # shared across instances (needs coredis)
+```
+
 ## Integrations
 
 Provider setup lives with each feature: [Email](../features/email.md), [Billing & Subscriptions](../features/billing.md), [Google OAuth](../features/google-oauth.md), and [AI](../features/ai.md).
