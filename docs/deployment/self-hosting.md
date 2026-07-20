@@ -141,6 +141,29 @@ server {
 }
 ```
 
+### Security headers
+
+In the `app.yourdomain.com` server block above, add the app's security headers:
+
+```nginx
+server {
+    server_name app.yourdomain.com;
+
+    add_header Content-Security-Policy "default-src 'self'; connect-src 'self' https://api.yourdomain.com; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+    location / {
+        proxy_pass http://localhost:80;
+        proxy_set_header Host $host;
+    }
+}
+```
+
+Replace `https://api.yourdomain.com` in `connect-src` with your real API URL, or the browser will block the app from calling it. See [Security](../features/security.md#frontend-add-at-your-host).
+
 ## SSL with Let's Encrypt
 
 ```bash
@@ -196,7 +219,7 @@ docker stats
 
 ## Alternative: Use Coolify
 
-If you want a GUI for managing Docker deployments, consider [Coolify](https://coolify.io) — a self-hostable web interface for Docker Compose deployments.
+If you want a GUI for managing Docker deployments, consider [Coolify](https://coolify.io), a self-hostable web interface for Docker Compose deployments.
 
 ## Security Considerations
 

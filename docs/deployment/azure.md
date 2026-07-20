@@ -368,6 +368,26 @@ az containerapp logs show \
 
 ## Next Steps
 
+### Security headers
+
+Add security headers to the app by creating `frontend/staticwebapp.config.json`:
+
+```json
+{
+  "globalHeaders": {
+    "Content-Security-Policy": "default-src 'self'; connect-src 'self' https://api.yourdomain.com; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+  }
+}
+```
+
+Replace `https://api.yourdomain.com` in `connect-src` with your real API URL, or the browser will block the app from calling it. See [Security](../features/security.md#frontend-add-at-your-host).
+
+### Other
+
 - Set up monitoring and alerts
 - Configure backups for database
 - Set up CI/CD pipeline for automated deployments

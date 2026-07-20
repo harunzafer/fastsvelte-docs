@@ -1,5 +1,5 @@
 ---
-description: "Deploy FastSvelte end-to-end on Railway — the FastAPI backend, PostgreSQL, and the SvelteKit app + landing, with custom domains."
+description: "Deploy FastSvelte end-to-end on Railway: the FastAPI backend, PostgreSQL, and the SvelteKit app + landing, with custom domains."
 keywords: "deploy fastsvelte railway, railway fastapi, railway postgres, railway sveltekit, railway docker deploy"
 ---
 
@@ -11,13 +11,13 @@ Railway is the simplest all-in-one path: it runs your FastAPI container, a manag
 
 ## 1. Create the project + database
 
-1. Create a [Railway](https://railway.app) project from your repo — it detects `backend/Dockerfile`.
+1. Create a [Railway](https://railway.app) project from your repo, and it detects `backend/Dockerfile`.
 2. Add a **PostgreSQL** service (New → Database → PostgreSQL); Railway provisions its connection string.
 
 ## 2. Deploy the backend (API)
 
 1. In the backend service → **Variables**, set the FastSvelte env (full list in [Configuration](../reference/configuration.md)):
-    - `FS_DB_URL` — reference the Postgres service's connection string
+    - `FS_DB_URL`: reference the Postgres service's connection string
     - `FS_ENVIRONMENT=prod`, `FS_BASE_API_URL=https://api.yourdomain.com`, `FS_BASE_WEB_URL=https://app.yourdomain.com`
     - `FS_JWT_SECRET_KEY`, `FS_CRON_SECRET`, plus Stripe/email keys as needed
 2. Run migrations once against the prod database with `./sqitch.sh prod deploy` (prod Sqitch target pointed at `FS_DB_URL`), from your local machine or CI.
@@ -38,3 +38,27 @@ Prefer Vercel for the static sites? The Vercel steps in [Fly.io + Neon + Vercel]
 - Confirm `FS_BASE_API_URL` / `FS_BASE_WEB_URL` match the live URLs so CORS and cookies work ([Configuration](../reference/configuration.md)).
 - Add the Stripe webhook at `https://api.yourdomain.com/webhooks/stripe` ([Billing & Subscriptions](../features/billing.md)).
 - Review the [Security](../features/security.md) checklist before launch.
+
+## Next steps
+
+### Security headers
+
+Railway serves static sites with Caddy. Add a `Caddyfile` in `frontend/` with a `header` block:
+
+```caddy
+:{$PORT} {
+	root * build
+	try_files {path} /index.html
+	file_server
+
+	header {
+		Content-Security-Policy "default-src 'self'; connect-src 'self' https://api.yourdomain.com; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+	}
+}
+```
+
+Replace `https://api.yourdomain.com` in `connect-src` with your real API URL, or the browser will block the app from calling it. See [Security](../features/security.md#frontend-add-at-your-host).
