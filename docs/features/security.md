@@ -11,6 +11,13 @@ FastSvelte ships sensible security defaults so you start on solid ground.
 
 Passwords are hashed with **Argon2id** (`backend/app/util/hash_util.py`), a modern memory-hard algorithm. Plaintext passwords are never stored.
 
+Changing a password from the profile page requires the current one, so a stolen session cookie is not enough to take over the account. Accounts created through Google have no password, so they see an account panel instead of the form.
+
+A password change also signs the user out on other devices (`backend/app/service/password_service.py`):
+
+- **Changed from the profile page:** other sessions are revoked, the current one is kept.
+- **Reset with an emailed link:** all sessions are revoked, including any an attacker is holding.
+
 ## Sessions
 
 - Tokens are 256-bit random values (`secrets.token_urlsafe(32)`).
