@@ -11,6 +11,8 @@ FastSvelte ships sensible security defaults so you start on solid ground.
 
 Passwords are hashed with **Argon2id** (`backend/app/util/hash_util.py`), a modern memory-hard algorithm. Plaintext passwords are never stored.
 
+Passwords must be 8 to 64 characters, enforced on signup, invitation accept and reset. See [Changing the Password Policy](../guides/changing-the-password-policy.md) to change the length or add your own rules.
+
 Changing a password from the profile page requires the current one, so a stolen session cookie is not enough to take over the account. Accounts created through Google have no password, so they see an account panel instead of the form.
 
 A password change also signs the user out on other devices (`backend/app/service/password_service.py`):
