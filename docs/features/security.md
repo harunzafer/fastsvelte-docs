@@ -29,13 +29,17 @@ A password change also signs the user out on other devices (`backend/app/service
 
 See [Authentication](authentication.md) for the full model.
 
+## CSRF
+
+Session cookies use `SameSite` `strict` in production, so browsers refuse to attach them to requests started by other sites. This protection assumes the frontend and the API share a registrable domain (for example `app.example.com` and `api.example.com`). Deploying them on unrelated domains would require `SameSite=None`, which removes the protection entirely. If you must deploy cross-site, add CSRF tokens or an Origin check first.
+
 ## Access control
 
 Precedence-based roles (`readonly` < `member` < `org_admin` < `sys_admin`) gate every route via `min_role_required(...)`. All business data is organization-scoped, so tenants are isolated. See [Multi-Tenancy](multi-tenancy.md).
 
 ## OAuth CSRF protection
 
-The Google OAuth flow signs a `state` parameter (JWT, `FS_JWT_SECRET_KEY`) and validates it on callback. See [Google OAuth](google-oauth.md).
+The Google OAuth flow signs a `state` parameter (JWT, `FS_JWT_SECRET_KEY`) and validates it on callback. The state's nonce is also mirrored into a short-lived cookie, so the callback only accepts a flow that was started by the same browser. See [Google OAuth](google-oauth.md).
 
 ## AI spend protection
 
