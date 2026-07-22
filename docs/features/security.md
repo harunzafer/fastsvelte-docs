@@ -1,11 +1,20 @@
 ---
-description: "FastSvelte security defaults: Argon2 password hashing, hashed session tokens, role-based access control, OAuth CSRF protection, AI spend caps, per-IP rate limiting, HTTP security headers, and per-environment cookie and CORS hardening."
+description: "FastSvelte security: audited defaults with Argon2 password hashing, hashed session tokens, role-based access control, hardened Google sign-in, AI spend caps, per-IP rate limiting, HTTP security headers, dependency monitoring, and per-environment cookie and CORS hardening."
 keywords: "fastsvelte security, argon2, session security, rbac, csrf, cors, secure cookies, ai budget cap, rate limiting, security headers, content security policy, saas security"
 ---
 
 # Security
 
-FastSvelte ships sensible security defaults so you start on solid ground.
+FastSvelte ships with security built in, not left as an exercise. The codebase went through a full security audit in 2026 covering authentication, sessions, Google sign-in, billing webhooks and the API surface, and every finding was fixed or documented. In plain terms, here is what protects your app out of the box:
+
+- Passwords hashed with **Argon2id**, the current best practice
+- Session, reset, verification and invitation tokens stored **only as hashes**, so a database leak does not hand out working credentials
+- Sign-in with Google protected against **account takeover and forged logins**
+- Brute force and email abuse blocked by **per-IP rate limits**
+- Strict **security headers** on every API response
+- Dependencies **patched and monitored** for new vulnerabilities
+
+The rest of this page explains each of these, and the [production checklist](#production-checklist) covers what to set before you go live.
 
 ## Passwords
 
@@ -23,7 +32,7 @@ A password change also signs the user out on other devices (`backend/app/service
 ## Sessions
 
 - Tokens are 256-bit random values (`secrets.token_urlsafe(32)`).
-- Only a **SHA-256 hash** of the token is stored server-side, so a database leak doesn't expose usable session tokens.
+- Only a **SHA-256 hash** of the token is stored server-side, so a database leak doesn't expose usable session tokens. Password-reset, email-verification and invitation tokens are stored the same way: the real token only ever travels in the emailed link.
 - The cookie is **HttpOnly** (JavaScript can't read it), **Secure** outside `dev`, and **SameSite** `strict` outside `dev` (`lax` in dev).
 - Logout invalidates the session server-side; expired sessions are pruned by the [cron job](../reference/configuration.md#background-jobs-cron).
 
@@ -37,9 +46,14 @@ Session cookies use `SameSite` `strict` in production, so browsers refuse to att
 
 Precedence-based roles (`readonly` < `member` < `org_admin` < `sys_admin`) gate every route via `min_role_required(...)`. All business data is organization-scoped, so tenants are isolated. See [Multi-Tenancy](multi-tenancy.md).
 
-## OAuth CSRF protection
+## Google sign-in protections
 
-The Google OAuth flow signs a `state` parameter (JWT, `FS_JWT_SECRET_KEY`) and validates it on callback. The state's nonce is also mirrored into a short-lived cookie, so the callback only accepts a flow that was started by the same browser. See [Google OAuth](google-oauth.md).
+Sign-in with Google is hardened against the two ways it's commonly abused:
+
+- **Account takeover by email.** Google is only trusted to identify a user when it confirms the email address is verified. An unverified address is rejected, so nobody can link a Google login to someone else's existing account by claiming their email.
+- **Forged logins.** The flow is bound to the browser that started it (a signed `state` value plus a matching one-time cookie), so a sign-in link can't be crafted elsewhere and used to log someone into an attacker's account.
+
+See [Google OAuth](google-oauth.md) for setup.
 
 ## AI spend protection
 
@@ -92,6 +106,10 @@ Kept out to stay lean; add if your threat model calls for it:
 - **Per-account login limiting** (keying login on the target email, not just the IP) defends a distributed attack against one account. Worth adding once you have accounts worth attacking.
 - **The AI endpoint** is authenticated, so it's not a public abuse surface, and it's already hard-capped by the AI spend protection above. It gets no separate HTTP limit.
 - **Reset and verify token endpoints** rely on high-entropy tokens rather than a request limit.
+
+## Dependencies
+
+Every dependency is pinned to an exact version (`uv.lock`, `package-lock.json`), so builds are reproducible and nothing updates without you noticing. The stack ships with **zero known vulnerabilities** at release, and the repository has automated security alerts turned on, so newly disclosed issues surface as ready-to-merge fix requests. Keeping current is a routine, not a scramble.
 
 ## HTTP security headers
 
