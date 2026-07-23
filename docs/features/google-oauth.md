@@ -41,6 +41,14 @@ FS_JWT_SECRET_KEY="your-jwt-secret-key-here"
 5. **Backend** validates `state`, exchanges the code, creates/loads the user, and sets the session cookie.
 6. **Frontend** lands logged in. OAuth errors redirect to `/login?error=...`.
 
+## Linking with an existing account
+
+Sign-in with Google is matched to a user by **email address**, so a Google login and an email/password login for the same person resolve to one account, not two:
+
+- **The email matches a verified account.** The Google login is linked to it, and that user can then sign in either way.
+- **The email matches an account that never verified its email.** Google has now proven the person owns the address, so the account is claimed for them: its old password is removed, any existing sessions are signed out, and the email is marked verified. This closes a gap where someone could park on an email they do not own before the real owner signs in.
+- **No account has that email.** A new account is created (in B2C). In B2B, sign-up is invitation-only, so an unknown email is turned away.
+
 ## Adding More Providers
 
 To add GitHub, Microsoft, etc.:
