@@ -331,7 +331,7 @@ Routes in `(protected)/` automatically check authentication on the frontend:
 
 ---
 
-## 7. Frequently Asked Questions
+## 7. Design Decisions
 
 ### Why file name suffixes like `user_service.py`?
 
@@ -350,6 +350,16 @@ user_route.py | user_service.py | user_model.py | user_repo.py
 ```
 
 When multiple files are open, IDE tabs show filenames, not full paths. Without suffixes, every tab displays `user.py` - making navigation difficult. The suffix also improves search: typing "user_service" immediately finds the right file instead of filtering through four different `user.py` files across different folders.
+
+### Where should imports go?
+
+Put imports at the top of the file by default. Python caches imported modules, so top-level imports cost nothing at runtime, and keeping them together makes a file's dependencies obvious at a glance.
+
+Move an import inside a function only for a specific reason:
+
+- **Optional dependencies** — a feature relying on a package not every install includes. An inline import keeps the module importable when the package is absent, failing only if the feature is actually used. The email provider factory does this: it imports the Azure, SendGrid, or Resend client only when that provider is selected, so you don't need all three SDKs installed.
+- **Breaking a circular import** — when two modules need each other at import time, a deferred import inside the function that needs it sidesteps the cycle.
+- **Smoke test isolation** — keeping a heavy or environment-dependent import out of module load so a smoke test can exercise the rest of the module without it.
 
 ### Why `Factory` vs `Singleton` in dependency injection?
 
