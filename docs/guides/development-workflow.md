@@ -42,3 +42,7 @@ npm run check       # type checking
 npm run test        # tests (also test:unit / test:e2e)
 npm run dev         # dev server (hot reload)
 ```
+
+## Continuous integration
+
+FastSvelte comes with a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs on every push and pull request. It checks formatting, lint, and types, and makes sure the apps build and the backend tests pass. It's yours to extend or adjust as your project grows.
