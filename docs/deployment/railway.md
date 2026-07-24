@@ -32,6 +32,18 @@ Railway is the simplest all-in-one path: it runs your FastAPI container, a manag
 
 Prefer Vercel for the static sites? The Vercel steps in [Fly.io + Neon + Vercel](fly-neon-vercel.md) apply to any backend host.
 
+### Serving the app from a sub-path
+
+To serve the app at `yourdomain.com/app` instead of `app.yourdomain.com`: each Railway service has its own domain, so the service that owns `yourdomain.com` (the landing) forwards the prefix. In the landing's `Caddyfile`, add:
+
+```text
+handle_path /app/* {
+    reverse_proxy https://<frontend-service-domain>
+}
+```
+
+`handle_path` strips the `/app` prefix, which is what the frontend service expects since it serves the build at its own root. The frontend and backend settings that go with this are in [Serving from a Sub-Path](sub-path.md).
+
 ## 4. Wire it together
 
 - Point DNS for `api`, `app`, and the apex at the Railway domains.

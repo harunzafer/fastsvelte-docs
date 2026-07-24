@@ -40,6 +40,18 @@ Create two Vercel projects from the same repo:
 
 Vercel auto-deploys on push and provisions SSL.
 
+### Serving the app from a sub-path
+
+To serve the app at `yourdomain.com/app` instead of `app.yourdomain.com`: Vercel serves one project per domain, so the landing project (which owns `yourdomain.com`) forwards the prefix. In the landing's `vercel.json`, add a rewrite that preserves the path:
+
+```json
+{
+	"rewrites": [{ "source": "/app/:path*", "destination": "https://<frontend-deployment>/app/:path*" }]
+}
+```
+
+The frontend and backend settings that go with this are in [Serving from a Sub-Path](sub-path.md).
+
 ## 4. Wire it together
 
 - DNS: `api` → Fly.io; `app` and the apex → Vercel.

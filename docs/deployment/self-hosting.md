@@ -164,6 +164,19 @@ server {
 
 Replace `https://api.yourdomain.com` in `connect-src` with your real API URL, or the browser will block the app from calling it. See [Security](../features/security.md#frontend-add-at-your-host).
 
+### Serving the app from a sub-path
+
+To serve the app at `yourdomain.com/app` instead of its own subdomain, drop the `app.yourdomain.com` server block and add a location to the main site's block that proxies to the same app container:
+
+```nginx
+location /app/ {
+    proxy_pass http://localhost:80/;  # trailing slash strips the /app prefix
+    proxy_set_header Host $host;
+}
+```
+
+The container keeps serving the build at its root with its own `index.html` fallback; the stripped prefix makes that work unchanged. The frontend and backend settings that go with this are in [Serving from a Sub-Path](sub-path.md).
+
 ## SSL with Let's Encrypt
 
 ```bash

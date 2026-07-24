@@ -266,6 +266,10 @@ az staticwebapp hostname set \
   --hostname app.yourdomain.com
 ```
 
+### Serving the app from a sub-path
+
+To serve the app at `yourdomain.com/app` instead of `app.yourdomain.com`: Static Web Apps serve one site per domain, so put the sites behind Azure Front Door, route `/app/*` to the app's Static Web App, and use a Front Door origin-path rewrite to strip the `/app` prefix before it reaches the Static Web App. The frontend and backend settings that go with this are in [Serving from a Sub-Path](sub-path.md).
+
 ## Scaling Configuration
 
 Container Apps auto-scale based on HTTP requests by default. Configure custom scaling:

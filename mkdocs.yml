@@ -102,6 +102,7 @@ plugins:
           - deployment/fly-neon-vercel.md: Best-of-breed — API on Fly.io, Postgres on Neon, static on Vercel.
           - deployment/azure.md: Azure — Container Apps + PostgreSQL Flexible Server + Static Web Apps.
           - deployment/self-hosting.md: Self-host the whole stack with Docker Compose.
+          - deployment/sub-path.md: Serve the app from a path prefix (yourdomain.com/app) instead of a subdomain.
         Reference:
           - reference/configuration.md: Backend FS_ environment variables, environments, CORS, and cron.
           - reference/architecture.md: Monorepo structure, layered backend, DI, request flow, frontend data loading.
@@ -164,6 +165,7 @@ nav:
       - Fly.io + Neon + Vercel: deployment/fly-neon-vercel.md
       - Azure: deployment/azure.md
       - Self-Hosting: deployment/self-hosting.md
+      - Serving from a Sub-Path: deployment/sub-path.md
   - Reference:
       - Configuration: reference/configuration.md
       - Architecture: reference/architecture.md

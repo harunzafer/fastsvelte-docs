@@ -30,6 +30,10 @@ Add two **Static Site** components from the same repo:
 - **frontend** (`frontend/`): build `npm run build`; env `PUBLIC_API_BASE_URL=https://api.yourdomain.com`; domain `app.yourdomain.com`.
 - **landing** (`landing/`): build `npm run build`; domain `yourdomain.com`.
 
+### Serving the app from a sub-path
+
+To serve the app at `yourdomain.com/app` instead of `app.yourdomain.com`: App Platform routes components of one app by path. Put both static sites in the same app, set the frontend component's **Route** to `/app` (the landing keeps `/`), and set `index.html` as the frontend's catchall document. The frontend and backend settings that go with this are in [Serving from a Sub-Path](sub-path.md).
+
 ## 4. Wire it together
 
 Point DNS at the App Platform domains, confirm the `FS_BASE_*` URLs match the live ones, add the Stripe webhook at `https://api.yourdomain.com/webhooks/stripe` ([Billing & Subscriptions](../features/billing.md)), and run the [Security](../features/security.md) checklist.
