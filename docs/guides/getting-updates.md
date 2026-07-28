@@ -1,27 +1,23 @@
 ---
-description: "How to get updates from FastSvelte while maintaining your customizations. Learn strategies for pulling upstream changes, managing git remotes, and minimizing merge conflicts."
-keywords: "fastsvelte updates, git upstream, merge upstream, starter kit updates, git remote, pull updates, version control, merge conflicts, fork maintenance"
+description: "How to get updates from FastSvelte: why projects diverge over time, how to cherry-pick security and bug fixes, and when merging still makes sense."
+keywords: "fastsvelte updates, git upstream, cherry-pick, security fixes, starter kit updates, merge conflicts, fork maintenance"
 ---
 
 # Getting Updates
 
-[FastSvelte](https://fastsvelte.dev) is yours to customize and extend. You can stay connected to receive bug fixes and improvements, or disconnect completely and own your codebase.
+[FastSvelte](https://fastsvelte.dev) is yours to customize and extend. From the first week you will add your own migrations, routes, and pages, and your project starts to diverge from the kit. That is by design: FastSvelte is a starting point you own, not a framework you track.
 
-## Minimizing Conflicts
+Be realistic about what that means for updates:
 
-**Extend rather than modify** to reduce merge conflicts. When you create new files instead of editing existing FastSvelte code, conflicts are limited to a few predictable integration points.
+- **Early on**, merging upstream works well. Your diff is small and conflicts are few.
+- **Over time, merging stops being sustainable.** Your schema, routes, and components drift away from the kit's, and a full merge brings more conflict than value. This is normal and expected, not a failure.
+- **What always works: taking specific fixes.** FastSvelte ships security and critical fixes as standalone commits precisely so you can cherry-pick them into any project, no matter how far it has diverged.
 
-**Extension Pattern for Fewer Conflicts:**
-- New routes, services, repositories in their own files
-- New frontend pages and components
-- New database migrations
-- Conflicts are still expected in files such as `container.py` or `routes.py` where new components are registered. But manageable.
+Starting a new project? Simply clone the latest FastSvelte. Everything below is for projects already in flight.
 
-## Update Methods
+## Set Up the Upstream Remote
 
-### 1. Merge (Recommended)
-
-Keep FastSvelte as an upstream remote and merge updates:
+Every method below needs FastSvelte available as a remote:
 
 ```bash
 # During initial setup (instead of removing origin)
@@ -33,92 +29,80 @@ git push -u origin main
 
 # If you already removed origin, add upstream back
 git remote add upstream https://github.com/harunzafer/fastsvelte.git
+```
 
-# Later, when you want updates
+## Security and Critical Fixes
+
+Read this section even if you never merge. We publish security and critical fixes as **standalone commits**, prefixed `[security]` or `[fix]`, so they can be taken in isolation:
+
+```bash
 git fetch upstream
 
-# View available updates
-git log --oneline HEAD..upstream/main
+# List the fixes you don't have yet
+git log --oneline --grep='^\[security\]' --grep='^\[fix\]' HEAD..upstream/main
 
-# Merge updates
+# Take one
+git cherry-pick <sha>
+```
+
+If a fix requires anything beyond the code change (rotating a secret, invalidating sessions), the commit message says so. Read it before picking.
+
+If the cherry-pick conflicts with your customizations, the fix is usually small: inspect it with `git show <sha>` and apply the change manually.
+
+**Get notified:** on GitHub, Watch the FastSvelte repository with Custom → Releases. Every `[security]` fix is also published as a GitHub Release, and critical ones are announced to customers by email.
+
+## After Any Update
+
+Whatever method you used, finish with these steps:
+
+```bash
+# If the update touches backend/db/, deploy the new migrations
+cd backend/db && ./sqitch.sh dev deploy      # repeat against prod when you release
+
+# If backend API routes or models changed, regenerate the API client
+cd frontend && npm install && npm run generate
+
+# Test before pushing
+cd backend && pytest
+cd frontend && npm run build && npm run test
+cd landing && npm run build && npm run check
+```
+
+## Update Methods Over a Project's Life
+
+### Early project: merge
+
+While your project is young and close to the kit, merging takes everything at once:
+
+```bash
+git fetch upstream
+git log --oneline HEAD..upstream/main   # review what's coming
 git merge upstream/main
-
-# Resolve conflicts if any (usually in container.py, routes.py)
-# After resolving, commit the merge
-
-# Test the changes
-cd backend && pytest                                    # For backend changes
-cd frontend && npm run build && npm run test            # For frontend changes
-cd landing && npm run build && npm run check            # For landing page changes
-
-# Push to your repository
-git push origin main
+# Resolve conflicts (usually container.py, routes.py), commit, test, push
 ```
 
-### 2. Rebase
+### Established project: cherry-pick what you need
 
-An alternative to merge that replays your commits on top of the upstream changes, resulting in a linear history:
+Once merging hurts more than it helps, switch to taking only what matters, using the same commands as the security section above. Cherry-picking works for any upstream commit, not only fixes. One caution: release commits build on each other, so picking a large feature release into a heavily diverged project can conflict extensively. Fixes are kept small for exactly this reason; features are take-at-your-own-risk.
 
-```bash
-# Set up upstream remote (same as merge method)
-git remote add upstream https://github.com/harunzafer/fastsvelte.git
+### Fallback: manual copy
 
-# Fetch updates
-git fetch upstream
+For maximum control, skip git entirely: review the change on GitHub and copy what you need into your project. This always works, and for a heavily customized file it is often faster than resolving a conflict.
 
-# Rebase your branch onto upstream
-git rebase upstream/main
+## Minimizing Conflicts
 
-# Resolve any conflicts, then continue
-git rebase --continue
+**Extend rather than modify** to reduce merge conflicts. When you create new files instead of editing existing FastSvelte code, conflicts are limited to a few predictable integration points:
 
-# Push to your repository (force required since history was rewritten)
-git push --force-with-lease origin main
-```
-
-**Best for:** Projects early in development with few commits, or when you want a clean linear history.
-
-**Caution:** Avoid rebasing if you have a shared branch with collaborators — it rewrites history.
-
-### 3. Cherry-pick
-
-For selective updates or when you've modified core files extensively:
-
-```bash
-# Cherry-pick specific commits
-git cherry-pick <commit-hash>
-
-# Or a range of commits
-git cherry-pick <start-commit>..<end-commit>
-
-# Resolve conflicts and continue
-git cherry-pick --continue
-```
-
-
-### 4. Manual Copy
-
-Remove the FastSvelte remote and manually copy changes when needed:
-
-```bash
-# During initial setup (default approach in Getting Started)
-git clone https://github.com/harunzafer/fastsvelte.git my-project
-cd my-project
-git remote remove origin
-git remote add origin <your-repo-url>
-git push -u origin main
-
-# Later, check GitHub for updates you want
-# Manually copy relevant changes to your project
-```
-
-**Best for:** Projects with heavy customization or teams that prefer full control.
+- New routes, services, repositories in their own files
+- New frontend pages and components
+- New database migrations
+- Conflicts are still expected in files such as `container.py` or `routes.py` where new components are registered. But manageable.
 
 ## Best Practices
 
 1. **Always test updates in development first** - Never update production directly
 2. **Create a backup branch** before major updates
-3. **Review release notes** to understand what changed
+3. **Review the commit message** of anything you pick: fixes that need manual steps say so there
 
 ---
 
