@@ -27,8 +27,9 @@ Railway is the simplest all-in-one path: it runs your FastAPI container, a manag
 
 `frontend/` and `landing/` are static SvelteKit builds. Add a static service for each that runs `npm install && npm run build` and serves the build output:
 
-- Set `PUBLIC_API_BASE_URL=https://api.yourdomain.com` (and any other `PUBLIC_*`) before the build.
+- Set `PUBLIC_API_BASE_URL=https://api.yourdomain.com` (and any other `PUBLIC_*`) before the build. These are baked in at build time, so they must exist as service variables when the build runs.
 - Attach `app.yourdomain.com` to the frontend and `yourdomain.com` to the landing.
+- The frontend is an SPA, so deep links like `/settings` must serve `build/index.html`. Railway's static sites are served by Caddy; if a deep-link refresh 404s, add `try_files {path} /index.html` to the service's `Caddyfile`.
 
 Prefer Vercel for the static sites? The Vercel steps in [Fly.io + Neon + Vercel](fly-neon-vercel.md) apply to any backend host.
 

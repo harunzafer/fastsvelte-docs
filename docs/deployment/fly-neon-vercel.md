@@ -38,7 +38,7 @@ Create two Vercel projects from the same repo:
 - **frontend**: root directory `frontend/`, build `npm run build`, env `PUBLIC_API_BASE_URL=https://api.yourdomain.com`; domain `app.yourdomain.com`.
 - **landing**: root directory `landing/`, build `npm run build`; domain `yourdomain.com`.
 
-Vercel auto-deploys on push and provisions SSL.
+Vercel auto-deploys on push and provisions SSL. No other configuration is needed: each directory ships a `vercel.json` that pins the output directory and handles routing (the SPA fallback for the app, clean URLs for the landing). Environment variables set in the Vercel project are available at build time, which is when a static build needs them.
 
 ### Serving the app from a sub-path
 
@@ -63,7 +63,7 @@ The frontend and backend settings that go with this are in [Serving from a Sub-P
 
 ### Security headers
 
-Add security headers to the app by creating `frontend/vercel.json`:
+The kit ships `frontend/vercel.json` (it pins the output directory and provides the SPA fallback). Add a `headers` key to it:
 
 ```json
 {

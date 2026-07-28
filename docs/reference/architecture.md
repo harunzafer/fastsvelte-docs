@@ -206,6 +206,22 @@ src/
 - **Svelte 5 runes**: Modern reactivity with `$state`, `$derived`, and `$effect` for local component state
 - **TailwindCSS + DaisyUI**: Utility-first styling with pre-built component themes
 
+### Rendering model: app and landing
+
+FastSvelte ships two SvelteKit projects that render differently on purpose:
+
+| | App (`frontend/`) | Landing (`landing/`) |
+|---|---|---|
+| **Mode** | SPA (`ssr: false`) | SSG (`ssr: true` + `prerender = true`) |
+| **Build output** | Static files with an `index.html` fallback | Static HTML per route, with real content |
+| **Why** | Lives behind auth, so there is nothing for crawlers to index. Client-side rendering keeps session handling simple. | Marketing pages live or die by SEO. Crawlers get complete HTML without running JavaScript. |
+
+Both projects build to plain static files, so **the only server in any deployment is the FastAPI backend**. There is no Node tier to run, scale, or pay for. Deep links like `/settings` still work on a static host because the deploy configs shipped with the kit (`vercel.json`, `staticwebapp.config.json`) rewrite unknown paths to the SPA fallback.
+
+Prerendering freezes the landing's content at build time. Editing marketing copy means rebuild and redeploy, and `PUBLIC_*` variables are baked in during the build (set them in CI, not in your host's runtime settings).
+
+**If your landing outgrows static.** Prerendering is ordinary server-side rendering that runs once at build, so the landing's code stays fully server-renderable. If you later need per-request rendering (personalization, instant-publish content), swap `adapter-static` for `adapter-node` or `adapter-vercel` in `landing/svelte.config.js` and remove the `prerender` flag from `src/routes/+layout.ts`. That is a two-line config change, not a rewrite. Forms like the newsletter signup never need it: point them at a FastAPI endpoint from the client.
+
 ### Auto-generated API client
 
 The frontend's TypeScript API client is generated from the backend's OpenAPI spec, so a backend change surfaces as a compile-time error in the frontend. See **[Type-Safe API Client (Orval)](../guides/orval.md)**.

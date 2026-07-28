@@ -39,40 +39,30 @@ sudo apt-get update
 sudo apt-get install docker-compose-plugin
 ```
 
-## FastSvelte Includes docker-compose.yml
+## The Backend Runs in Docker Compose
 
-FastSvelte repository includes a `docker-compose.yml` file as a starting point for deployment.
+The kit ships `backend/docker-compose.yml`, which runs the two server pieces: PostgreSQL and the FastAPI backend.
 
 ```yaml
-# Example structure (simplified)
+# backend/docker-compose.yml (shipped with the kit, simplified)
 services:
   db:
-    image: postgres:16
+    image: postgres:17
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: fastsvelte
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      - db-data:/var/lib/postgresql/data
 
   api:
-    build: ./backend
+    build:
+      context: .
     depends_on:
       - db
-    environment:
-      FS_DB_URL: postgres://postgres:${DB_PASSWORD}@db:5432/fastsvelte
-      FS_JWT_SECRET_KEY: ${JWT_SECRET}
     ports:
       - "8000:3100"
-
-  frontend:
-    build: ./frontend
-    environment:
-      PUBLIC_API_BASE_URL: https://api.yourdomain.com
-    ports:
-      - "80:80"
-      - "443:443"
+    env_file:
+      - .env
 ```
+
+The frontend and landing are **not** compose services. They are static builds (see [Architecture](../reference/architecture.md#rendering-model-app-and-landing)): the app is an SPA with an `index.html` fallback, the landing is prerendered HTML. [Deploy the Frontends](#deploy-the-frontends-static-files) below covers serving them.
 
 ## Deployment Steps
 
@@ -86,22 +76,19 @@ cd fastsvelte
 ### 2. Configure Environment
 
 ```bash
-# Create .env file
-cat > .env << EOF
-DB_PASSWORD=your_secure_password
-JWT_SECRET=your_jwt_secret_key
-STRIPE_API_KEY=your_stripe_key
-EOF
+cd backend
+cp .env.example .env
+# Fill in the secrets: database credentials, session secret, Stripe keys, ...
 ```
 
 ### 3. Deploy
 
 ```bash
-# Start all services
-docker-compose up -d
+# Start db + api (from backend/)
+docker compose up -d
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ### 4. Run Migrations
@@ -115,9 +102,60 @@ cd /app
 # Your migration commands here
 ```
 
-## Setting Up Nginx Reverse Proxy
+## Deploy the Frontends (Static Files)
 
-For production, use Nginx as a reverse proxy:
+`frontend/` and `landing/` build to plain static files, and `PUBLIC_*` variables are baked in at build time, so set them before `npm run build`. There are two ways to serve the output; Option A is simpler.
+
+### Option A: nginx serves the builds (recommended)
+
+Build on the server (Node 24+) or in CI, then copy the output into place:
+
+```bash
+sudo mkdir -p /var/www/fastsvelte/app /var/www/fastsvelte/landing
+
+cd frontend
+npm ci
+PUBLIC_API_BASE_URL=https://api.yourdomain.com npm run build
+sudo cp -r build/. /var/www/fastsvelte/app/
+
+cd ../landing
+npm ci
+npm run build
+sudo cp -r build/. /var/www/fastsvelte/landing/
+```
+
+Rebuild and re-copy whenever the code or any `PUBLIC_*` value changes. The landing is prerendered, so marketing content edits also need a rebuild.
+
+### Option B: Frontends in Docker
+
+Prefer everything containerized? Create `frontend/Dockerfile` (the kit does not ship one):
+
+```dockerfile
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+ARG PUBLIC_API_BASE_URL
+ENV PUBLIC_API_BASE_URL=$PUBLIC_API_BASE_URL
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+COPY <<'EOF' /etc/nginx/conf.d/default.conf
+server {
+    listen 80;
+    root /usr/share/nginx/html;
+    try_files $uri /index.html;
+}
+EOF
+```
+
+`PUBLIC_API_BASE_URL` must be a **build arg** (under `build.args` in your compose service), not a runtime variable: a static build cannot read the environment after it is built. Repeat for `landing/`, changing the nginx line to `try_files $uri $uri.html =404;` (the landing is prerendered HTML, not an SPA). With this option, the nginx blocks below `proxy_pass` to the containers instead of serving files.
+
+## Setting Up Nginx
+
+nginx fronts everything: it proxies the API container and, with Option A, serves the static builds directly:
 
 ```nginx
 # /etc/nginx/sites-available/fastsvelte
@@ -131,15 +169,22 @@ server {
     }
 }
 
+# App (static SPA): serve files, fall back to index.html for deep links
 server {
     server_name app.yourdomain.com;
+    root /var/www/fastsvelte/app;
+    try_files $uri /index.html;
+}
 
-    location / {
-        proxy_pass http://localhost:80;
-        proxy_set_header Host $host;
-    }
+# Landing (prerendered): serve files, map /about to about.html
+server {
+    server_name yourdomain.com;
+    root /var/www/fastsvelte/landing;
+    try_files $uri $uri.html =404;
 }
 ```
+
+With Option B, replace the two static blocks with `proxy_pass` blocks pointing at the frontend and landing containers' published ports.
 
 ### Security headers
 
@@ -155,10 +200,8 @@ server {
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
 
-    location / {
-        proxy_pass http://localhost:80;
-        proxy_set_header Host $host;
-    }
+    root /var/www/fastsvelte/app;
+    try_files $uri /index.html;
 }
 ```
 
@@ -166,7 +209,7 @@ Replace `https://api.yourdomain.com` in `connect-src` with your real API URL, or
 
 ### Serving the app from a sub-path
 
-To serve the app at `yourdomain.com/app` instead of its own subdomain, drop the `app.yourdomain.com` server block and add a location to the main site's block that proxies to the same app container:
+Sub-path serving is simplest with Option B, where the app container keeps serving the build at its root. To serve the app at `yourdomain.com/app` instead of its own subdomain, drop the `app.yourdomain.com` server block and add a location to the main site's block that proxies to the app container:
 
 ```nginx
 location /app/ {
@@ -184,7 +227,7 @@ The container keeps serving the build at its root with its own `index.html` fall
 sudo apt-get install certbot python3-certbot-nginx
 
 # Get certificates
-sudo certbot --nginx -d api.yourdomain.com -d app.yourdomain.com
+sudo certbot --nginx -d api.yourdomain.com -d app.yourdomain.com -d yourdomain.com
 ```
 
 ## Maintenance
@@ -205,9 +248,12 @@ docker run --rm -v fastsvelte_postgres_data:/data -v $(pwd):/backup ubuntu tar c
 # Pull latest changes
 git pull
 
-# Rebuild and restart
-docker-compose down
-docker-compose up -d --build
+# Rebuild and restart the backend
+(cd backend && docker compose up -d --build)
+
+# Rebuild and redeploy the frontends (Option A)
+(cd frontend && npm run build) && sudo cp -r frontend/build/. /var/www/fastsvelte/app/
+(cd landing && npm run build) && sudo cp -r landing/build/. /var/www/fastsvelte/landing/
 ```
 
 ### Monitoring

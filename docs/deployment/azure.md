@@ -225,11 +225,17 @@ This will:
 2. Set up GitHub Actions for automatic deployments
 3. Build and deploy your frontend
 
-**Configure environment variables** in Azure Portal:
-1. Go to Static Web App → Configuration
-2. Add application settings:
-   - `PUBLIC_API_BASE_URL`: Your Container App URL
-   - `PUBLIC_APP_NAME`: Your app name
+**Configure environment variables in the deployment workflow.** The app is a static build: `PUBLIC_*` variables are baked in at build time, so they must be present when GitHub Actions runs the build. (Portal application settings only apply at runtime and have no effect on a static site.) Edit the workflow that `az staticwebapp create` generated (`.github/workflows/azure-static-web-apps-*.yml`) and add the variables to the deploy step:
+
+```yaml
+- name: Build And Deploy
+  uses: Azure/static-web-apps-deploy@v1
+  env:
+    PUBLIC_API_BASE_URL: https://your-container-app-url
+    PUBLIC_APP_NAME: YourApp
+```
+
+Deep links like `app.yourdomain.com/settings` work out of the box: the kit ships `frontend/staticwebapp.config.json` with a `navigationFallback` rewrite to the SPA's `index.html`.
 
 ### 12. Deploy Landing Page
 
@@ -374,7 +380,7 @@ az containerapp logs show \
 
 ### Security headers
 
-Add security headers to the app by creating `frontend/staticwebapp.config.json`:
+The kit ships `frontend/staticwebapp.config.json` (it provides the SPA fallback for deep links). Add security headers to it with a `globalHeaders` block:
 
 ```json
 {
