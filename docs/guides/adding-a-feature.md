@@ -320,7 +320,7 @@ from app.service.project_service import ProjectService
 project_repo = providers.Singleton(ProjectRepo, db_config=db_config)
 
 # 3. Add to the Container class in the services section (around line 157)
-project_service = providers.Factory(
+project_service = providers.Singleton(
     ProjectService,
     project_repo=project_repo,
 )

@@ -153,8 +153,8 @@ In FastSvelte, all objects are wired up in one place (`app/config/container.py`)
 
 ```python
 # Define everything once
-self.project_repo = providers.Factory(ProjectRepo, db_config=self.db_config)
-self.project_service = providers.Singleton(ProjectService, project_repo=self.project_repo)
+project_repo = providers.Singleton(ProjectRepo, db_config=db_config)
+project_service = providers.Singleton(ProjectService, project_repo=project_repo)
 ```
 
 Then use them anywhere:
@@ -386,16 +386,16 @@ Move an import inside a function only for a specific reason:
 user_service = providers.Singleton(UserService, user_repo=user_repo)
 ```
 
-**Factory** = new instance each time:
+**Factory** = a fresh instance every time it's injected:
 
 ```python
-# Fresh UserRepo instance per request
-user_repo = providers.Factory(UserRepo, db_config=db_config)
+# Fresh instance per injection
+report_builder = providers.Factory(ReportBuilder, plan_repo=plan_repo)
 ```
 
-Use `Factory` when the component might hold state (like database connections).
+FastSvelte's container registers everything as a `Singleton`, deliberately. Repos and services are stateless: they hold only references to other singletons and read-only config, so there is no per-request state to isolate. The one stateful component, the database connection pool, lives inside the `db_config` singleton precisely so that every repo shares one pool instead of each opening its own connections. The OpenAI client is similar: it keeps persistent HTTP connections open, and sharing one instance reuses them instead of reconnecting on every request.
 
-Use `Singleton` when it's stateless (like services).
+Use `Factory` when you add a component that holds per-request state (a unit-of-work object, a mutable builder, anything unsafe to share across concurrent requests). When you add an ordinary repo or service, register it as a `Singleton` like everything else in the container.
 
 ### How does error handling work?
 
