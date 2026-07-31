@@ -44,8 +44,9 @@ Change tokens or pricing in settings — no code edit, and **no Stripe products 
 |----------|---------|
 | `GET /billing/credit-packs` | List available packs |
 | `POST /billing/credit-packs/checkout` | `{ pack_id, return_base_url }` → `{ url }` — redirect the user to this Stripe Checkout URL |
+| `POST /billing/credit-packs/verify` | `{ session_id }` → `{ status }`; called by the billing page after checkout returns, to confirm the purchase with Stripe and fulfill it if the webhook has not |
 
-The org must already have a Stripe customer (complete subscription billing setup first). Fulfillment is handled on the Stripe **`checkout.session.completed`** webhook (`backend/app/api/route/stripe_webhook_route.py`): `CreditPackService.fulfill_purchase` checks `metadata.type == "credit_pack"`, credits the balance, and appends an `organization_credit_transaction` audit row.
+The org must already have a Stripe customer (complete subscription billing setup first). Fulfillment runs through `CreditPackService.fulfill_purchase` from **two** paths: the Stripe **`checkout.session.completed`** webhook (`backend/app/api/route/stripe_webhook_route.py`) and the billing page's verify call after the redirect. Whichever arrives first credits the balance and appends an `organization_credit_transaction` audit row; the other is turned away by a unique payment reference on that log. A purchase can therefore never credit twice, and a lost webhook never costs a customer their credits.
 
 ## Model pricing
 

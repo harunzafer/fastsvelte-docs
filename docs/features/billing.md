@@ -5,7 +5,7 @@ keywords: "fastsvelte stripe, subscription billing, stripe customer portal, stri
 
 # Billing & Subscriptions
 
-FastSvelte handles **subscription billing** through Stripe's **Customer Portal** — no custom billing UI to build. Subscription state is **webhook-driven**: Stripe is the source of truth, and the backend updates the database only from webhook events sent to `/webhooks/stripe`. Three columns hold the link: `organization.stripe_customer_id`, `plan.stripe_product_id`, and `organization_plan` (status, period, subscription id).
+FastSvelte handles **subscription billing** through Stripe's **Customer Portal** — no custom billing UI to build. Subscription state is **webhook-driven**: Stripe is the source of truth, and the backend updates the database only from webhook events sent to `/webhooks/stripe`. Credit-pack purchases have a second path: the billing page verifies the checkout with Stripe after the redirect, so a lost webhook cannot cost a customer their credits. Three columns hold the link: `organization.stripe_customer_id`, `plan.stripe_product_id`, and `organization_plan` (status, period, subscription id).
 
 ## Setup
 
@@ -37,6 +37,16 @@ The kit seeds three plans (Free, Professional, Premium). At **`/admin/plans`**, 
 ### 4. Configure the Customer Portal
 
 In **Settings → Billing → Customer portal**: enable "customers can switch plans" and add the products/prices you want to offer; enable updating payment methods and viewing invoices, and optionally cancellation. Save.
+
+## How plans are created and assigned
+
+The kit seeds three plans (Free, Professional, Premium); Free is flagged as the default. From there, assignment is automatic:
+
+1. **New organizations get the Free plan on their own.** In B2C this happens at first login, in B2B at organization creation and on org admin logins. The same background step also creates the Stripe customer. It never blocks a login: if it can't finish (for example, Stripe keys are missing), it logs the error and tries again on the next login.
+2. **Paid plans arrive by webhook.** When a customer subscribes through Stripe Checkout, the `customer.subscription.created/updated` events update the organization's plan to match Stripe.
+3. **Fallback.** An organization with no plan row uses whichever plan is flagged as default. Only when both are missing does the app treat the organization as having no plan: the billing page says so, and AI calls run on purchased credits alone (or are refused when there are none).
+
+**If the billing page shows "No AI plan active":** no plan resolved for that organization. Check the backend log for onboarding errors (usually Stripe configuration) and confirm one plan still has the default flag set (Admin → Plans).
 
 ## Local development
 
