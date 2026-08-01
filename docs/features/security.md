@@ -132,7 +132,7 @@ Your frontend host, CDN, or reverse proxy must send these headers for the app. T
 
 The headers, and where to put them, are in the guide for your host: [Vercel](../deployment/fly-neon-vercel.md#security-headers), [Railway](../deployment/railway.md#security-headers), [Azure](../deployment/azure.md#security-headers), [DigitalOcean](../deployment/digitalocean.md#security-headers), [self-hosting](../deployment/self-hosting.md#security-headers).
 
-!!! note "Why the policy allows inline styles"
+??? note "Why the policy allows inline styles"
 
     The policy sets `style-src 'self' 'unsafe-inline'`. Svelte animations inject an inline `<style>` element at runtime, so transitions break without it. This applies to styles only. Scripts stay limited to your own domain, which is where the real risk lies.
 

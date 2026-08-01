@@ -20,13 +20,13 @@ Deploy FastSvelte on your own server using Docker Compose for full control over 
 - Domain: $10-15/year
 - **Total:** ~$5-15/month
 
-## Why Docker Compose?
+??? note "Why Docker Compose?"
 
-- **Full control** - Your server, your rules
-- **Cost-effective** - Cheapest option for single deployment
-- **Simple** - One configuration file
-- **Portable** - Works on any Docker host
-- **No vendor lock-in** - Standard Docker setup
+    - **Full control**: your server, your rules
+    - **Cost-effective**: the cheapest option for a single deployment
+    - **Simple**: one configuration file
+    - **Portable**: works on any Docker host
+    - **No vendor lock-in**: standard Docker setup
 
 ## Prerequisites
 

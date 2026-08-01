@@ -281,7 +281,7 @@ await invalidate(KEYS.notes); // re-runs the load, which refetches the list
 
 Every scope in the app is named in `lib/invalidation-keys.ts`. They live in one file because a mistyped scope fails silently: `invalidate('app:note')` matches nothing, refreshes nothing, and leaves stale data on screen without an error.
 
-!!! note "Why `depends()` is needed at all"
+??? note "Why `depends()` is needed at all"
 
     SvelteKit can track fetches for you, but only when they go through the `fetch` it passes into the load function. Our Orval client uses its own, so each load names its scope explicitly with `depends()` and mutations invalidate it by that name.
 

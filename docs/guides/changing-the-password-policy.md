@@ -67,7 +67,7 @@ Collecting the missing pieces before raising means the user is told everything a
 ("must contain an uppercase letter, a digit, a symbol") rather than fixing one and
 discovering the next.
 
-!!! info "Why not `Field(pattern=...)`?"
+??? note "Why not `Field(pattern=...)`?"
 
     The usual regex trick, `(?=.*[A-Z])`, uses lookahead, and Pydantic's default regex
     engine doesn't support it. The model then fails to build at import time rather than
@@ -112,12 +112,12 @@ types.
 Leave `frontend/src/routes/(auth)/login/+page.svelte` alone, for the same reason as
 `SubmittedPassword`.
 
-## Why there are no character rules by default
+??? note "Why there are no character rules by default"
 
-Requiring an uppercase letter and a symbol sounds stricter, but it mostly produces
-`Password1!`. Length is what actually costs an attacker time, and a rule that blocks
-`sturdy walnut harbor lamp` while allowing `Password1!` is working against you. Current
-guidance from NIST, the US standards body whose recommendations most of the industry
-follows, is to require length, allow everything else, and drop composition rules entirely.
-That's the default here. Turning them on is a decision about your own users and any
-compliance regime you answer to, which is why it's a few lines rather than a setting.
+    Requiring an uppercase letter and a symbol sounds stricter, but it mostly produces
+    `Password1!`. Length is what actually costs an attacker time, and a rule that blocks
+    `sturdy walnut harbor lamp` while allowing `Password1!` is working against you. Current
+    guidance from NIST, the US standards body whose recommendations most of the industry
+    follows, is to require length, allow everything else, and drop composition rules entirely.
+    That's the default here. Turning them on is a decision about your own users and any
+    compliance regime you answer to, which is why it's a few lines rather than a setting.
