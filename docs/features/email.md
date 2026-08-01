@@ -1,11 +1,11 @@
 ---
-description: "FastSvelte transactional email — configure Resend, SendGrid, or Azure Communication Services (or a dev stub) for verification, password reset, and invitation emails."
+description: "FastSvelte transactional email: configure Resend, SendGrid, or Azure Communication Services (or a dev stub) for verification, password reset, and invitation emails."
 keywords: "fastsvelte email, transactional email, resend, sendgrid, azure communication services, email provider, fastapi email"
 ---
 
 # Transactional Email
 
-FastSvelte sends transactional email — verification, password reset, and organization invitations — through a pluggable provider. Pick one of **Resend**, **SendGrid**, or **Azure Communication Services**, or use the **stub** provider in development.
+FastSvelte sends transactional email (verification, password reset, and organization invitations) through a pluggable provider. Pick one of **Resend**, **SendGrid**, or **Azure Communication Services**, or use the **stub** provider in development.
 
 ## Choosing a Provider
 
@@ -13,7 +13,7 @@ Set `FS_EMAIL_PROVIDER` in `backend/.env` to one of: `resend`, `sendgrid`, `azur
 
 For the providers you don't use, clean up all three places:
 
-1. **`backend/pyproject.toml`** — delete the two package lines you don't need, then run `uv sync`:
+1. **`backend/pyproject.toml`**: delete the two package lines you don't need, then run `uv sync`:
 
     ```toml
     "azure-communication-email>=1.1.0",  # FS_EMAIL_PROVIDER=azure
@@ -25,12 +25,12 @@ For the providers you don't use, clean up all three places:
     cd backend && uv sync
     ```
 
-2. **`backend/.env`** — remove the env vars for the unused providers.
-3. **`backend/app/config/settings.py`** — remove the corresponding settings fields (e.g. `resend_api_key`, `resend_sender_address`, `resend_sender_name`).
+2. **`backend/.env`**: remove the env vars for the unused providers.
+3. **`backend/app/config/settings.py`**: remove the corresponding settings fields (e.g. `resend_api_key`, `resend_sender_address`, `resend_sender_name`).
 
 ## Resend
 
-A modern email API with a generous free tier — recommended for most new projects.
+A modern email API with a generous free tier. Recommended for most new projects.
 
 1. Sign up at [resend.com](https://resend.com) and create an API key at [resend.com/api-keys](https://resend.com/api-keys).
 2. Add and verify your sending domain at [resend.com/domains](https://resend.com/domains).
@@ -72,7 +72,7 @@ For local development without sending real email:
 FS_EMAIL_PROVIDER="stub"
 ```
 
-Emails are logged to the backend console instead of sent — look for `[STUB EMAIL]` blocks containing verification and invitation links.
+Emails are logged to the backend console instead of sent. Look for `[STUB EMAIL]` blocks containing verification and invitation links.
 
 ## Testing
 
@@ -84,5 +84,5 @@ curl -X POST http://localhost:8000/password/forgot \
 
 ## Troubleshooting
 
-- **Not sending** — verify the API key, confirm the sender domain/address is verified with the provider, and check the backend logs.
-- **Production** — set up SPF/DKIM for your sending domain.
+- **Not sending**: verify the API key, confirm the sender domain/address is verified with the provider, and check the backend logs.
+- **Production**: set up SPF/DKIM for your sending domain.

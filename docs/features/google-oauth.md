@@ -1,5 +1,5 @@
 ---
-description: "Add Google OAuth social login to FastSvelte — Google Cloud credentials, redirect URIs, environment configuration, the login flow, and adding more providers."
+description: "Add Google OAuth social login to FastSvelte: Google Cloud credentials, redirect URIs, environment configuration, the login flow, and adding more providers."
 keywords: "fastsvelte google oauth, social login, oauth2, google sign in, fastapi oauth, sveltekit oauth"
 ---
 
@@ -59,8 +59,8 @@ To add GitHub, Microsoft, etc.:
 
 ## Troubleshooting
 
-- **Redirect URI mismatch** — it must match the provider config exactly (scheme, host, port, path).
-- **Invalid client** — recheck the client ID/secret.
-- **HTTPS** — most providers require HTTPS redirect URIs in production.
+- **Redirect URI mismatch**: it must match the provider config exactly (scheme, host, port, path).
+- **Invalid client**: recheck the client ID/secret.
+- **HTTPS**: most providers require HTTPS redirect URIs in production.
 
 See **[Authentication](authentication.md)** for sessions, roles, and the rest of the auth model.

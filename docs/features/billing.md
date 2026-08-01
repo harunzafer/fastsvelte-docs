@@ -1,11 +1,11 @@
 ---
-description: "Stripe billing in FastSvelte — subscriptions via the Stripe Customer Portal, linking products to plans, webhooks, local development, and going live."
+description: "Stripe billing in FastSvelte: subscriptions via the Stripe Customer Portal, linking products to plans, webhooks, local development, and going live."
 keywords: "fastsvelte stripe, subscription billing, stripe customer portal, stripe webhooks, stripe cli, payment processing"
 ---
 
 # Billing & Subscriptions
 
-FastSvelte handles **subscription billing** through Stripe's **Customer Portal** — no custom billing UI to build. Subscription state is **webhook-driven**: Stripe is the source of truth, and the backend updates the database only from webhook events sent to `/webhooks/stripe`. Credit-pack purchases have a second path: the billing page verifies the checkout with Stripe after the redirect, so a lost webhook cannot cost a customer their credits. Three columns hold the link: `organization.stripe_customer_id`, `plan.stripe_product_id`, and `organization_plan` (status, period, subscription id).
+FastSvelte handles **subscription billing** through Stripe's **Customer Portal**, so there is no custom billing UI to build. Subscription state is **webhook-driven**: Stripe is the source of truth, and the backend updates the database only from webhook events sent to `/webhooks/stripe`. Credit-pack purchases have a second path: the billing page verifies the checkout with Stripe after the redirect, so a lost webhook cannot cost a customer their credits. Three columns hold the link: `organization.stripe_customer_id`, `plan.stripe_product_id`, and `organization_plan` (status, period, subscription id).
 
 ## Setup
 
@@ -17,22 +17,22 @@ Create a Stripe account and a [sandbox](https://docs.stripe.com/sandboxes/dashbo
 FS_STRIPE_API_KEY=sk_test_YOUR_KEY_HERE
 ```
 
-Only the secret key is needed — the portal handles all payment UI. Never commit it.
+Only the secret key is needed; the portal handles all payment UI. Never commit it.
 
 ### 2. Create products
 
 In **Products → Add Product**, create your tiers and copy each **Product ID** (`prod_...`):
 
-- **Free tier** — a single **monthly** price; must be **$0** (auto-provisioned on first login).
-- **Paid tiers** — **monthly** and **annual** prices in the same currency.
+- **Free tier**: a single **monthly** price; must be **$0** (auto-provisioned on first login).
+- **Paid tiers**: **monthly** and **annual** prices in the same currency.
 
 !!! tip "No public free tier?"
 
-    You still need a $0 default product for auto-provisioning — name it "Default" and simply don't add it to the portal, so users can't select it.
+    You still need a $0 default product for auto-provisioning. Name it "Default" and leave it out of the portal, so users can't select it.
 
 ### 3. Link products to plans
 
-The kit seeds three plans (Free, Professional, Premium). At **`/admin/plans`**, edit each and paste its **Stripe Product ID**. The default plan (Free) must map to your $0 product — it's validated and auto-assigned to new users.
+The kit seeds three plans (Free, Professional, Premium). At **`/admin/plans`**, edit each and paste its **Stripe Product ID**. The default plan (Free) must map to your $0 product. It's validated and auto-assigned to new users.
 
 ### 4. Configure the Customer Portal
 
@@ -78,13 +78,13 @@ Use Stripe [test cards](https://stripe.com/docs/testing) in sandbox (any future 
 In **Developers → Webhooks**, add an endpoint at `https://api.yourdomain.com/webhooks/stripe` subscribed to these events, and copy its signing secret to `FS_STRIPE_WEBHOOK_SECRET`:
 
 - `customer.subscription.created` / `updated` / `deleted`
-- `checkout.session.completed` — fulfills [AI credit-pack](ai-billing.md) purchases
+- `checkout.session.completed`: fulfills [AI credit-pack](ai-billing.md) purchases
 
 Then switch to **Live mode**: recreate products with live pricing (free tier still $0), use live `sk_live_...` keys, update `/admin/plans` with the live Product IDs, configure the portal in live mode, and test a real upgrade.
 
 ## Troubleshooting
 
-**Free subscription didn't sync (dev).** If you logged in before `stripe listen` was running, the free subscription exists in Stripe but not your database ("No active plan found"). Fix it from `/billing` → **Manage Subscription** → in the portal click **Cancel subscription**, then **Don't cancel** — that fires `customer.subscription.updated` and syncs. (Or resend the original event from **Stripe → Events**.)
+**Free subscription didn't sync (dev).** If you logged in before `stripe listen` was running, the free subscription exists in Stripe but not your database ("No active plan found"). Fix it from `/billing` → **Manage Subscription** → in the portal click **Cancel subscription**, then **Don't cancel**. That fires `customer.subscription.updated` and syncs. (Or resend the original event from **Stripe → Events**.)
 
 ## Related
 
