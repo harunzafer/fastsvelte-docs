@@ -1,11 +1,11 @@
 ---
-description: "FastSvelte AI integration guide — the LLMClient interface, OpenAI setup, the sample note copilot, streaming responses, and swapping LLM providers."
+description: "FastSvelte AI integration guide: the LLMClient interface, OpenAI setup, the sample note copilot, streaming responses, and swapping LLM providers."
 keywords: "fastsvelte ai, llm integration, openai, responses api, streaming, copilot, fastapi ai, ai saas starter kit"
 ---
 
 # AI Integration
 
-FastSvelte ships a working, end-to-end AI feature so you can build your own on top of it instead of from scratch: a small provider-agnostic `LLMClient` seam, an OpenAI implementation, and a sample **note copilot** (Improve / Summarize) that streams its output to the UI. Every call is metered and billed — see **[AI Usage & Credit Billing](ai-billing.md)**.
+FastSvelte ships a working, end-to-end AI feature so you can build your own on top of it instead of from scratch: a small provider-agnostic `LLMClient` seam, an OpenAI implementation, and a sample **note copilot** (Improve / Summarize) that streams its output to the UI. Every call is metered and billed. See **[AI Usage & Credit Billing](ai-billing.md)**.
 
 ## Setup
 
@@ -27,7 +27,7 @@ openai_client = providers.Singleton(
 )
 ```
 
-Whatever model you set **must have a row in the `model_price` table**, or usage-cost calculation fails — see [AI Usage & Credit Billing](ai-billing.md#model-pricing).
+Whatever model you set **must have a row in the `model_price` table**, or usage-cost calculation fails. See [AI Usage & Credit Billing](ai-billing.md#model-pricing).
 
 ## The `LLMClient` interface
 
@@ -51,7 +51,7 @@ This seam is the whole point: swap providers by writing another `LLMClient`, and
 
 ## OpenAI implementation
 
-`backend/app/service/openai_client.py` implements `LLMClient` against the OpenAI **Responses API** (`client.responses.parse` for structured output, `client.responses.stream` for streaming) — not the older Chat Completions surface. Token usage is read from the response and returned as `TokenUsage(provider, model, input_tokens, output_tokens, total_tokens)`.
+`backend/app/service/openai_client.py` implements `LLMClient` against the OpenAI **Responses API** (`client.responses.parse` for structured output, `client.responses.stream` for streaming), not the older Chat Completions surface. Token usage is read from the response and returned as `TokenUsage(provider, model, input_tokens, output_tokens, total_tokens)`.
 
 ## The sample copilot
 
@@ -64,7 +64,7 @@ They're surfaced on the note routes in `backend/app/api/route/note_route.py`:
 | `POST /notes/{id}/copilot/improve` | `{ "tone"?: string }` | `MEMBER` | streamed `text/plain` |
 | `POST /notes/{id}/copilot/summarize` | `{ "tone"?: string }` | `MEMBER` | streamed `text/plain` |
 
-Each handler loads the note (404 if missing), checks the org has AI capacity before streaming (estimated from the note length), then returns a `StreamingResponse`. The stream is wrapped by the billing service so the final usage is recorded automatically — see [AI Usage & Credit Billing](ai-billing.md).
+Each handler loads the note (404 if missing), checks the org has AI capacity before streaming (estimated from the note length), then returns a `StreamingResponse`. The stream is wrapped by the billing service so the final usage is recorded automatically. See [AI Usage & Credit Billing](ai-billing.md).
 
 ## Streaming to the frontend
 
@@ -76,13 +76,13 @@ The frontend consumes the `text/plain` stream incrementally in `frontend/src/lib
 2. Add a route that checks capacity, then wraps the stream with `AiUsageBillingService.stream_and_record(...)` (streaming) or calls `record_llm_usage(...)` after a `structured()` call.
 3. Regenerate the typed API client and wire the UI.
 
-Billing is not optional plumbing you add later — route every call through `AiUsageBillingService` so usage is metered consistently.
+Billing is not optional plumbing you add later. Route every call through `AiUsageBillingService` so usage is metered consistently.
 
 ## Using a different provider
 
-OpenAI is the shipped implementation. To swap it, write one class implementing the `LLMClient` interface against your provider's SDK and point `container.py` at it — no route, service, billing, or UI code changes, since that seam is all the rest of the backend depends on. See **[Swapping the LLM Provider](../guides/swapping-llm-provider.md)** for a complete, drop-in Claude (Anthropic) recipe and the Gemini / LiteLLM pattern.
+OpenAI is the shipped implementation. To swap it, write one class implementing the `LLMClient` interface against your provider's SDK and point `container.py` at it. No route, service, billing, or UI code changes, since that seam is all the rest of the backend depends on. See **[Swapping the LLM Provider](../guides/swapping-llm-provider.md)** for a complete, drop-in Claude (Anthropic) recipe and the Gemini / LiteLLM pattern.
 
 ## Next steps
 
-- **[AI Usage & Credit Billing](ai-billing.md)** — how calls are metered, the monthly allotment, credit packs, and usage reporting.
-- **[Stripe Integration](billing.md)** — the subscription billing the AI allotment and credit purchases build on.
+- **[AI Usage & Credit Billing](ai-billing.md)**: how calls are metered, the monthly allotment, credit packs, and usage reporting.
+- **[Stripe Integration](billing.md)**: the subscription billing the AI allotment and credit purchases build on.

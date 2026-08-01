@@ -3,9 +3,7 @@ description: "FastSvelte tutorials - Step-by-step guides for adding new entities
 keywords: "fastsvelte tutorials, fastapi tutorial, sveltekit tutorial, add new entity, database migration, api integration, fullstack development"
 ---
 
-# Tutorials
-
-This section provides step-by-step guides for extending [FastSvelte](https://fastsvelte.dev) with new functionality.
+# Adding a Feature
 
 ## Adding a New Entity (End-to-End)
 

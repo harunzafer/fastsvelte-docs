@@ -8,7 +8,7 @@ keywords: "fastsvelte seo, sveltekit meta tags, canonical url, open graph, twitt
 [FastSvelte](https://fastsvelte.dev)'s landing ships with a reusable `Seo` component
 (`src/lib/components/Seo.svelte`) that emits a correct, per-page `<head>`: a single title and
 meta description, a **self-referencing canonical**, and Open Graph / Twitter card tags. The
-homepage is already wired up — you only need this guide when you **add new routes**.
+homepage is already wired up. You only need this guide when you **add new routes**.
 
 ## Using the component
 
@@ -54,15 +54,15 @@ export const load: PageLoad = async ({ parent }) => {
 
 It's tempting to put a default `<meta name="description">` or canonical in `+layout.svelte` so
 every page inherits it. **Don't.** SvelteKit deduplicates `<title>`, but it does **not** dedupe
-`<meta>` or `<link>` tags — they accumulate. Two things go wrong:
+`<meta>` or `<link>` tags; they accumulate. Two things go wrong:
 
 - **Duplicate descriptions.** Any page that sets its *own* description on top of the layout default
-  ships *two* `<meta name="description">` tags. (A page that relies solely on the default ships one
-  — the trap only springs once a page tries to override it, which most will.)
+  ships *two* `<meta name="description">` tags. (A page that relies solely on the default ships one;
+  the trap only springs once a page tries to override it, which most will.)
 - **Leaked canonical.** A hardcoded homepage canonical in the layout is inherited by every page that
   doesn't set its own. That's a *consolidation hint* telling search engines those pages are
   duplicates of the homepage, so their ranking signals get folded into it and they don't rank as
-  themselves. (It's a hint, not a `noindex` — search engines may ignore it — but you don't want to
+  themselves. (It's a hint, not a `noindex`, so search engines may ignore it, but you don't want to
   be fighting it.)
 
 The `Seo` component avoids this by emitting exactly one description and a canonical derived from

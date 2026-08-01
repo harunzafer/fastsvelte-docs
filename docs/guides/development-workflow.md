@@ -1,5 +1,5 @@
 ---
-description: "The FastSvelte development loop — make changes across database, backend, and frontend, regenerate the API client, and run tests and linters."
+description: "The FastSvelte development loop: make changes across database, backend, and frontend, regenerate the API client, and run tests and linters."
 keywords: "fastsvelte workflow, development loop, sqitch, api client generation, pytest, vitest, hot reload"
 ---
 

@@ -1,5 +1,5 @@
 ---
-description: "Replace the FastSvelte note copilot demo with your own application — plan your domain, build your features, and remove the demo code."
+description: "Replace the FastSvelte note copilot demo with your own application: plan your domain, build your features, and remove the demo code."
 keywords: "fastsvelte remove demo, replace demo, note copilot, remove sample app, customize fastsvelte"
 ---
 
@@ -19,7 +19,9 @@ Follow **[Adding a Feature](adding-a-feature.md#adding-a-new-entity-end-to-end)*
 
 ## 3. Remove the demo code
 
-The AI billing/usage infrastructure (`llm_client.py`, `openai_client.py`, and the usage/credit services + repos) is reusable — keep it if you want AI features of your own (see [AI Copilot](../features/ai.md)).
+!!! warning "Keep the AI billing infrastructure"
+
+    The AI billing/usage infrastructure (`llm_client.py`, `openai_client.py`, and the usage/credit services and repos) is reusable. Delete it only if you're sure you won't add AI features of your own (see [AI Copilot](../features/ai.md)).
 
 **Backend:**
 
@@ -38,7 +40,7 @@ cd frontend
 rm -rf src/routes/(protected)/notes
 ```
 
-**Database** — drop the note table:
+**Database.** Drop the note table:
 
 ```bash
 cd backend/db
@@ -59,7 +61,7 @@ COMMIT;
 
 Fill `revert/remove_note_table.sql` with the original `CREATE TABLE` from `deploy/001_schema.sql`, then `./sqitch.sh dev deploy`.
 
-**Optional** — if you're not using AI at all:
+**Optional.** If you're not using AI at all:
 
 ```bash
 cd backend

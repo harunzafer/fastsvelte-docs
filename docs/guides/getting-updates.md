@@ -13,7 +13,7 @@ Be realistic about what that means for updates:
 - **Over time, merging stops being sustainable.** Your schema, routes, and components drift away from the kit's, and a full merge brings more conflict than value. This is normal and expected, not a failure.
 - **What always works: taking specific fixes.** FastSvelte ships security and critical fixes as standalone commits precisely so you can cherry-pick them into any project, no matter how far it has diverged.
 
-Starting a new project? Simply clone the latest FastSvelte. Everything below is for projects already in flight.
+Starting a new project? Clone the latest FastSvelte. Everything below is for projects already in flight.
 
 ## Set Up the Upstream Remote
 
@@ -49,7 +49,9 @@ If a fix requires anything beyond the code change (rotating a secret, invalidati
 
 If the cherry-pick conflicts with your customizations, the fix is usually small: inspect it with `git show <sha>` and apply the change manually.
 
-**Get notified:** on GitHub, Watch the FastSvelte repository with Custom → Releases. Every `[security]` fix is also published as a GitHub Release, and critical ones are announced to customers by email.
+!!! tip "Get notified of security fixes"
+
+    On GitHub, Watch the FastSvelte repository with Custom → Releases. Every `[security]` fix is also published as a GitHub Release, and critical ones are announced to customers by email.
 
 ## After Any Update
 
@@ -96,16 +98,16 @@ For maximum control, skip git entirely: review the change on GitHub and copy wha
 - New routes, services, repositories in their own files
 - New frontend pages and components
 - New database migrations
-- Conflicts are still expected in files such as `container.py` or `routes.py` where new components are registered. But manageable.
+
+Conflicts still happen in the registration points (`container.py`, `routes.py`) where new components hook in, but they stay small and predictable.
 
 ## Best Practices
 
-1. **Always test updates in development first** - Never update production directly
-2. **Create a backup branch** before major updates
-3. **Review the commit message** of anything you pick: fixes that need manual steps say so there
+1. **Test updates in development first.** Never update production directly.
+2. **Create a backup branch** before major updates.
+3. **Review the commit message** of anything you pick: fixes that need manual steps say so there.
 
----
+## Next steps
 
-**Next Steps:**
-- [Development Guide](development-workflow.md) - Build your application
-- [Deployment](../deployment/index.md) - Deploy to production
+- **[Development Workflow](development-workflow.md)**: build your application
+- **[Deployment](../deployment/index.md)**: deploy to production

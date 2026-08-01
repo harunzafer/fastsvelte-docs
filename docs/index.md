@@ -14,7 +14,7 @@ The interactive `init.py` script handles setup end to end. Clone the repo, run `
 git clone https://github.com/harunzafer/fastsvelte.git my-project
 cd my-project && git remote remove origin
 
-# 2. Interactive setup — sets up your project for you (--dry-run to preview)
+# 2. Interactive setup (--dry-run to preview what it will do)
 uv run init.py
 
 # 3. Create a system admin, then start the backend
@@ -34,6 +34,6 @@ Open **[localhost:5173](http://localhost:5173)** and log in with the admin you c
 
 ## Next steps
 
-- **[Guides](guides/project-setup.md)** — set up your project, develop, and ship
-- **[Features](features/authentication.md)** — auth, billing, AI, multi-tenancy, and more
+- **[Guides](guides/project-setup.md)**: set up your project, develop, and ship
+- **[Features](features/authentication.md)**: auth, billing, AI, multi-tenancy, and more
 - **[Architecture](reference/architecture.md)** · **[Deployment](deployment/index.md)**

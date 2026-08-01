@@ -1,5 +1,5 @@
 ---
-description: "FastSvelte type-safe API client — how Orval generates a TypeScript client from the FastAPI OpenAPI spec, and how to regenerate it after backend changes."
+description: "FastSvelte type-safe API client: how Orval generates a TypeScript client from the FastAPI OpenAPI spec, and how to regenerate it after backend changes."
 keywords: "fastsvelte orval, type-safe api client, openapi, typescript client generation, fastapi openapi, sveltekit api client"
 ---
 
@@ -14,7 +14,11 @@ cd frontend
 npm run generate   # reads the OpenAPI spec and regenerates the client (backend must be running)
 ```
 
-Generated code lives in `frontend/src/lib/api/gen/` — **don't edit it by hand**; it's overwritten on every generate.
+Generated code lives in `frontend/src/lib/api/gen/`.
+
+!!! warning "Don't edit generated code by hand"
+
+    Everything under `gen/` is overwritten on every generate. Hand edits are silently lost.
 
 ## How it works
 
@@ -39,4 +43,4 @@ Generated code lives in `frontend/src/lib/api/gen/` — **don't edit it by hand*
     const note: NoteResponse = await createNote({ title: "My Note", content: "..." });
     ```
 
-Change the backend → run `npm run generate` → the compiler flags any frontend code that no longer matches.
+When you change the backend and regenerate, the TypeScript compiler flags any frontend code that no longer matches.

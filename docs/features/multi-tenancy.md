@@ -1,5 +1,5 @@
 ---
-description: "Configure FastSvelte for B2B team collaboration - Setup closed registration, user invitations, organization management, and role-based access control for multi-tenant SaaS applications."
+description: "Configure FastSvelte for B2B team collaboration: closed registration, user invitations, organization management, and role-based access control for multi-tenant SaaS applications."
 keywords: "b2b saas, team collaboration, organization management, user invitations, multi-tenant, role-based access, fastsvelte b2b mode, closed registration, saas permissions"
 ---
 
@@ -18,10 +18,7 @@ In B2B mode, FastSvelte operates as a closed registration system where:
 
 ## Initial Setup
 
-When you run `uv run init.py` and select **B2B mode**, the script creates:
-
-1. A system administrator account (sys_admin)
-2. Sets `FS_MODE=b2b` in your environment
+When you run `uv run init.py` and select **B2B mode**, the script creates a system administrator account (`sys_admin`) and sets `FS_MODE=b2b` in your environment.
 
 ## The B2B Flow
 
@@ -80,10 +77,6 @@ When an org_admin invites a new member:
 4. They accept the invitation and create their account
 5. They automatically join the organization with the assigned role
 
-!!! note "Finding Invitation Links in Development"
-
-    Since the email service defaults to `stub` in development, check your backend logs for `[STUB EMAIL]` blocks that contain the invitation URL.
-
 ## User Roles in B2B Mode
 
 | Role | Description | Permissions |
@@ -97,17 +90,10 @@ When an org_admin invites a new member:
 
 When running in B2B mode:
 
-- ❌ Public signup page (`/signup`) returns 404
-- ❌ OAuth signup creates accounts only for existing invited users
-- ❌ Individual billing is hidden (billing managed at organization level)
-- ✅ Only invitation-based registration is allowed
-
-## Development vs Production
-
-The flow is the same in both development and production environments. The key differences:
-
-- **Development**: Uses local email preview (no actual emails sent by default)
-- **Production**: Sends real invitation emails via your configured email service
+- Public signup page (`/signup`) returns 404
+- OAuth sign-in creates accounts only for existing invited users
+- Individual billing is hidden (billing is managed at the organization level)
+- Registration happens only through invitations
 
 ## Configuration
 
@@ -118,7 +104,7 @@ B2B mode is controlled by the backend `FS_MODE` environment variable:
 FS_MODE=b2b
 ```
 
-The frontend doesn't need a mode variable — it reads the mode from the backend's `/config` endpoint at runtime. Update `FS_MODE` and restart the backend.
+The frontend doesn't need a mode variable. It reads the mode from the backend's `/config` endpoint at runtime. Update `FS_MODE` and restart the backend.
 
 ## Common Workflows
 

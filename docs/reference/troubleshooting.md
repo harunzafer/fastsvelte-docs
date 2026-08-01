@@ -142,10 +142,10 @@ ModuleNotFoundError: No module named 'app.service'
 **Solution:** Always use absolute imports from `app` package:
 
 ```python
-# ✅ Correct
+# Correct
 from app.service.user_service import UserService
 
-# ❌ Incorrect
+# Incorrect
 from ..service.user_service import UserService
 ```
 
@@ -289,10 +289,10 @@ Component state not reactive
 **Solution:** Use Svelte 5 runes correctly:
 
 ```typescript
-// ✅ Correct
+// Correct
 let count = $state(0);
 
-// ❌ Incorrect
+// Incorrect
 let count = 0;
 ```
 

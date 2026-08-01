@@ -5,6 +5,8 @@ keywords: "fastsvelte password policy, password validation, pydantic validator, 
 
 # Changing the Password Policy
 
+FastSvelte enforces a length-only password policy out of the box, checked in both the API and the forms. After this guide you can change the limits or add rules of your own without locking existing users out.
+
 ## What's enforced now
 
 Passwords must be **8 to 64 characters**, checked on signup, invitation accept and
