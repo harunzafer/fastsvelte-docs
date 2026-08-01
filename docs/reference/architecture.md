@@ -33,7 +33,7 @@ FastSvelte intentionally avoids many popular libraries and frameworks that other
 
 ## 2. End-to-End Request Flow
 
-Let's trace what happens when a user creates a project in your SaaS app. (This example follows the [Adding a New Entity tutorial](../guides/adding-a-feature.md#adding-a-new-entity-end-to-end) where you build a project management feature.)
+Let's trace what happens when a user creates a project in your SaaS app. (This example follows the [Adding a Feature tutorial](../guides/adding-a-feature.md), where you build a project management feature.)
 
 ### High-Level Flow
 
