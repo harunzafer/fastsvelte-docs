@@ -15,7 +15,7 @@ FastSvelte ships an AI copilot demo (note Improve / Summarize) to show the patte
 
 ## 2. Build your features
 
-Follow **[Adding a Feature](adding-a-feature.md#adding-a-new-entity-end-to-end)** to add an entity end to end (schema → repository → service → route → UI), then apply the same pattern to your own domain.
+Follow **[Adding a Feature](adding-a-feature.md)** to add an entity end to end (schema → repository → service → route → UI), then apply the same pattern to your own domain.
 
 ## 3. Remove the demo code
 
