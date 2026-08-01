@@ -1,11 +1,11 @@
 ---
-description: "Swap FastSvelte's OpenAI integration for Claude (Anthropic), Gemini, or any provider by implementing the LLMClient interface — a complete drop-in Claude recipe."
+description: "Swap FastSvelte's OpenAI integration for Claude (Anthropic), Gemini, or any provider by implementing the LLMClient interface, with a complete drop-in Claude recipe."
 keywords: "fastsvelte llm provider, swap openai, claude anthropic, gemini, litellm, llmclient, ai saas starter kit"
 ---
 
 # Swapping the LLM Provider
 
-FastSvelte ships OpenAI as the default LLM, but no route, service, or billing code ever imports a provider SDK directly — they depend only on a small `LLMClient` seam (see [AI Integration](../features/ai.md#the-llmclient-interface)). To switch providers you write one class implementing that interface and repoint the dependency-injection container at it. Nothing else in the backend changes.
+FastSvelte ships OpenAI as the default LLM, but no route, service, or billing code ever imports a provider SDK directly. Everything depends on a small `LLMClient` seam (see [AI Integration](../features/ai.md#the-llmclient-interface)). To switch providers you write one class implementing that interface and repoint the dependency-injection container at it. Nothing else in the backend changes.
 
 ## The contract
 
@@ -22,7 +22,7 @@ class LLMClient(Protocol):
 
 `messages` is an OpenAI-style `list[dict]` (roles `system` / `user` / `assistant`); each adapter is responsible for translating it into its own provider's request shape.
 
-## Claude (Anthropic) — a complete recipe
+## Claude (Anthropic): a complete recipe
 
 Add `anthropic` to the backend dependencies, then create `backend/app/service/claude_client.py`:
 
@@ -105,7 +105,7 @@ Add `anthropic_api_key` / `anthropic_model` to `Settings` (mirroring the existin
 
 ## Add the pricing row
 
-Cost is computed from the `model_price` table, so **add a row for the Claude model under provider `anthropic`** or cost calculation fails — see [AI Usage & Credit Billing](../features/ai-billing.md#model-pricing). Current Claude pricing (per 1M tokens, input / output):
+Cost is computed from the `model_price` table, so **add a row for the Claude model under provider `anthropic`** or cost calculation fails. See [AI Usage & Credit Billing](../features/ai-billing.md#model-pricing). Current Claude pricing (per 1M tokens, input / output):
 
 | Model | Input / 1M | Output / 1M |
 |-------|-----------|-------------|
@@ -119,5 +119,5 @@ Cost is computed from the `model_price` table, so **add a row for the Claude mod
 
 ## Next steps
 
-- **[AI Integration](../features/ai.md)** — the `LLMClient` seam, the sample copilot, and streaming.
-- **[AI Usage & Credit Billing](../features/ai-billing.md)** — how every call is metered and billed.
+- **[AI Integration](../features/ai.md)**: the `LLMClient` seam, the sample copilot, and streaming.
+- **[AI Usage & Credit Billing](../features/ai-billing.md)**: how every call is metered and billed.

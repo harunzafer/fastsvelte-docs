@@ -1,11 +1,11 @@
 ---
-description: "Add a metered, plan-limited feature to FastSvelte — define a FeatureKey, set per-plan limits, enforce the quota, and optionally let credits top it up."
+description: "Add a metered, plan-limited feature to FastSvelte: define a FeatureKey, set per-plan limits, enforce the quota, and optionally let credits top it up."
 keywords: "fastsvelte metering, custom feature quota, featurekey, plan limits, usage-based feature, credit top-up"
 ---
 
 # Metering a Custom Feature
 
-After this guide you can put any action behind a per-plan usage limit — and, optionally, let credit top-ups extend it the way AI tokens do. See [Plans & Usage](../features/plans-and-usage.md) for the engine this builds on.
+After this guide you can put any action behind a per-plan usage limit and, optionally, let credit top-ups extend it the way AI tokens do. See [Plans & Usage](../features/plans-and-usage.md) for the engine this builds on.
 
 ## 1. Define the feature
 
@@ -27,11 +27,11 @@ class PlanFeatures(BaseModel):
 
 ## 2. Set limits per plan
 
-Add `max_projects` to each plan's `features` map — via the admin Plans page or seed data (see [Plans & Usage](../features/plans-and-usage.md#configuring-limits)).
+Add `max_projects` to each plan's `features` map, either from the admin Plans page or in seed data (see [Plans & Usage](../features/plans-and-usage.md#configuring-limits)).
 
 ## 3. Enforce the limit
 
-Wrap the action with the generic usage service — check before, record after:
+Wrap the action with the generic usage service. Check the quota before, record usage after:
 
 ```python
 if not await usage_service.check_quota_for(org_id, FeatureKey.MAX_PROJECTS, 1):
@@ -50,5 +50,3 @@ Two caveats, since the credit system is currently AI-token-specific:
 
 - The balance is a single **token-denominated** pool. If you want a separate balance per feature (e.g. "project credits"), add a per-feature balance rather than reusing the token pool.
 - Decide the unit. Reusing the token pool only makes sense if your feature is denominated the same way.
-
-So: metering any feature is built in; credit top-ups for non-AI features are a small, deliberate extension.

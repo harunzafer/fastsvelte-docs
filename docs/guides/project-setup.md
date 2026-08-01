@@ -17,7 +17,15 @@ You run `init.py` once during [Quick Start](../index.md). It:
 - installs backend (`uv`) and frontend/landing (`npm`) dependencies;
 - generates the type-safe API client (see [Type-Safe API Client](orval.md)).
 
-Pass `--dry-run` to preview without making changes. In development the email provider defaults to `stub`, so nothing is sent — verification and invitation links appear as `[STUB EMAIL]` blocks in the backend logs (see [Transactional Email](../features/email.md)). Once setup works, you can safely delete `init.py`; it's only needed once.
+Pass `--dry-run` to preview without making changes.
+
+!!! note "No email is sent in development"
+
+    The email provider defaults to `stub`. Verification and invitation links appear as `[STUB EMAIL]` blocks in the backend logs instead (see [Transactional Email](../features/email.md)).
+
+!!! tip
+
+    Once setup works, you can delete `init.py`. It's only needed once.
 
 ## Onboarding teammates
 

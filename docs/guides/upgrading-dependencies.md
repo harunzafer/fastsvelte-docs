@@ -1,5 +1,5 @@
 ---
-description: "Keep a FastSvelte project's dependencies current and secure — the Dependabot policy, backend (uv) and frontend (npm) upgrade workflows, and major-version upgrades."
+description: "Keep a FastSvelte project's dependencies current and secure: the Dependabot policy, backend (uv) and frontend (npm) upgrade workflows, and major-version upgrades."
 keywords: "fastsvelte dependencies, dependabot, uv upgrade, npm update, dependency management, major version upgrade"
 ---
 
@@ -9,13 +9,13 @@ After this guide you can keep dependencies current and secure using Dependabot p
 
 ## Upgrade policy
 
-FastSvelte ships a [Dependabot config](https://github.com/) (`.github/dependabot.yml`) so routine upgrades are automated and reviewable:
+FastSvelte ships a Dependabot config (`.github/dependabot.yml`) so routine upgrades are automated and reviewable:
 
-- **Automated, weekly:** Dependabot opens **grouped** PRs once a week per ecosystem — `npm` (frontend), `npm` (landing), and `uv` (backend). The backend uses a 7-day cooldown so brand-new releases settle before they're proposed.
+- **Automated, weekly:** Dependabot opens **grouped** PRs once a week per ecosystem: `npm` (frontend), `npm` (landing), and `uv` (backend). The backend uses a 7-day cooldown so brand-new releases settle before they're proposed.
 - **Minor & patch upgrades:** handled by those weekly PRs. Review and merge once CI passes (`backend.yml`, `frontend.yml`, `landing.yml`).
-- **Major versions:** **excluded** from Dependabot (`version-update:semver-major` is ignored) and done deliberately, one component at a time, since they may require code changes — follow the major-version workflow below.
+- **Major versions:** **excluded** from Dependabot (`version-update:semver-major` is ignored) and done deliberately, one component at a time, since they may require code changes. Follow the major-version workflow below.
 - **Security updates:** fast-track immediately, outside the weekly cadence.
-- **Version pinning:** `pyproject.toml` and `package.json` declare lower-bound (`>=`) ranges; the lockfiles (`uv.lock`, `package-lock.json`) pin exact versions and are committed — so installs are reproducible while ranges stay flexible.
+- **Version pinning:** `pyproject.toml` and `package.json` declare lower-bound (`>=`) ranges; the lockfiles (`uv.lock`, `package-lock.json`) pin exact versions and are committed, so installs are reproducible while ranges stay flexible.
 
 ## Backend dependencies (Python)
 
@@ -32,7 +32,9 @@ uv add --upgrade package_name
 uv run pytest
 ```
 
-**Note:** Smoke tests in `backend/test/smoke/` verify app startup, database connectivity, and API functionality. Database tests require PostgreSQL running (`docker compose up db -d`) but skip gracefully if unavailable.
+!!! note "What the smoke tests cover"
+
+    Smoke tests in `backend/test/smoke/` verify app startup, database connectivity, and API functionality. Database tests require PostgreSQL running (`docker compose up db -d`) but skip if it's unavailable.
 
 ## Frontend dependencies (npm)
 
