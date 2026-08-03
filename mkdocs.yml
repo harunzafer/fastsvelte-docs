@@ -78,6 +78,7 @@ plugins:
           - guides/swapping-llm-provider.md: Swap OpenAI for Claude, Gemini, or LiteLLM via the LLMClient seam.
           - guides/changing-the-password-policy.md: Adjust the length limits or add your own password rules, backend and frontend.
           - guides/replacing-the-demo.md: Plan your app, build features, and remove the demo code.
+          - guides/migrating-an-existing-project.md: Migrate an existing app onto FastSvelte with your AI agent, plan first, then small reviewed tasks.
           - guides/orval.md: Type-safe TypeScript API client generated from the OpenAPI spec.
           - guides/upgrading-dependencies.md: Dependabot policy and uv/npm upgrade workflows.
           - guides/getting-updates.md: How to pull FastSvelte updates into your fork.
@@ -141,6 +142,7 @@ nav:
       - Swapping the LLM Provider: guides/swapping-llm-provider.md
       - Changing the Password Policy: guides/changing-the-password-policy.md
       - Replacing the Demo: guides/replacing-the-demo.md
+      - Migrating an Existing Project: guides/migrating-an-existing-project.md
       - Type-Safe API Client (Orval): guides/orval.md
       - Upgrading Dependencies: guides/upgrading-dependencies.md
       - Getting Updates: guides/getting-updates.md
