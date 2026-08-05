@@ -24,7 +24,13 @@ The note demo does exactly this on create and delete.
 
 ## Configuring limits
 
-Set each plan's limits in its `features` map via the admin Plans page or seed data. See [Admin & User Dashboards](admin-dashboards.md). How plans map to Stripe products is covered in [Billing & Subscriptions](billing.md).
+Set each plan's limits in its `features` map via the admin Plans page or seed data.
+
+A numeric limit of `-1` means **unlimited**. `{"max_notes": -1}` grants notes with no ceiling, and the billing page shows "Unlimited" in place of a usage meter.
+
+Any other negative value is not unlimited. It resolves to a limit of zero and blocks the feature, so a plan you meant to uncap would refuse every request.
+
+See [Admin & User Dashboards](admin-dashboards.md). How plans map to Stripe products is covered in [Billing & Subscriptions](billing.md).
 
 ## Add your own metered feature
 
