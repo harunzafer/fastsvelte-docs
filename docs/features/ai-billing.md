@@ -17,7 +17,7 @@ A call's tokens are charged in a fixed order:
 
 `backend/app/service/ai_usage_billing_service.py` owns this. Two entry points:
 
-- **`has_ai_capacity(org_id, estimated_tokens)`**: a pre-flight check the copilot routes call *before* streaming, so an org that's out of capacity gets a clean `QuotaExceeded` instead of a half-streamed answer. It estimates from input length (~4 chars/token).
+- **`ensure_ai_in_plan(org_id)`**, then **`has_ai_capacity(org_id, estimated_tokens)`**: pre-flight checks the copilot routes run *before* streaming. The first refuses with `FEATURE_DISABLED` when the plan's `enable_ai` flag is off. The second estimates tokens from input length (~4 chars/token) and refuses with `QuotaExceeded` when neither the allotment nor credits can cover the call. The flag comes first on purpose: an org whose tier has no AI is told to upgrade, not to top up credits it can never spend.
 - **`stream_and_record(...)`** / **`record_llm_usage(...)`**: after the call, the actual `TokenUsage` is split across allotment → credits → overage, the consumed buckets are debited, the USD cost is computed (see [Model pricing](#model-pricing)), and a row is written to `llm_usage_log` tagged with the `bucket` it drew from.
 
 For streaming calls, `stream_and_record` forwards text chunks to the client and bills the final `TokenUsage` once the stream ends, with identical accounting to a non-streamed call.
@@ -25,6 +25,15 @@ For streaming calls, `stream_and_record` forwards text chunks to the client and 
 ## The monthly allotment
 
 The allotment is just one feature in the generic [Plans & Usage](plans-and-usage.md) system: the `token_limit` `FeatureKey`, metered per billing period and resetting each period. Set each plan's token budget alongside its other limits; it isn't a separate AI-only mechanism. An org with no `token_limit` has a zero allotment and must rely on credit packs.
+
+## Switching AI off per tier
+
+`enable_ai` is a plan flag, and it is not the same switch as `token_limit: 0`:
+
+- `token_limit: 0` removes the monthly allotment, but purchased credit packs still spend. AI keeps working for as long as the org buys credits.
+- `enable_ai: false` turns AI off for the tier entirely, credits or no credits. The copilot endpoints refuse with `FEATURE_DISABLED`, and the billing page hides the Buy AI Credits card so the tier is never offered packs it cannot spend.
+
+The shipped Free plan sets both, which demonstrates the flag. A product that wants free tiers to buy credits and use AI sets `enable_ai: true` with `token_limit: 0` in the plan JSON; no code change is involved.
 
 ## Credit packs
 
