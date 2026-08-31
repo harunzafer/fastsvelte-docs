@@ -16,6 +16,10 @@ FastSvelte deploys as three pieces plus a database. A typical production setup m
 
 Anything that can run a Docker container, serve static files, and provide PostgreSQL works, so you can **mix any providers you like**. Below are the most common, straightforward setups. Pick one and you're live.
 
+!!! info
+
+    Background on the SPA + API pairing itself (CORS, session cookies, and the deploy shapes): [How to use FastAPI with Svelte](https://fastsvelte.dev/fastapi-svelte).
+
 ## Common setups
 
 Five complete, end-to-end guides. Pick one:
