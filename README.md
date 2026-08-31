@@ -2,7 +2,7 @@
 
 # 📚 FastSvelte Documentation
 
-Official documentation for [**FastSvelte**](https://fastsvelte.dev) - The modern full-stack framework for building blazing-fast web applications.
+Official documentation for [**FastSvelte**](https://fastsvelte.dev), the FastAPI + SvelteKit SaaS starter kit.
 
 [![FastSvelte](https://img.shields.io/badge/FastSvelte-Website-ff3e00?style=for-the-badge&logo=svelte)](https://fastsvelte.dev)
 [![Documentation](https://img.shields.io/badge/View-Live%20Docs-blue?style=for-the-badge)](https://docs.fastsvelte.dev)
