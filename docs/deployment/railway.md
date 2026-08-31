@@ -1,4 +1,5 @@
 ---
+title: "Deploy FastAPI + SvelteKit to Railway"
 description: "Deploy FastSvelte end-to-end on Railway: the FastAPI backend, PostgreSQL, and the SvelteKit app + landing, with custom domains."
 keywords: "deploy fastsvelte railway, railway fastapi, railway postgres, railway sveltekit, railway docker deploy"
 ---

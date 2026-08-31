@@ -1,4 +1,5 @@
 ---
+title: "Deploy FastAPI + SvelteKit on Fly.io, Neon, and Vercel"
 description: "Deploy FastSvelte best-of-breed: FastAPI on Fly.io, PostgreSQL on Neon, and the SvelteKit app + landing on Vercel."
 keywords: "deploy fastsvelte fly.io, neon postgres, vercel sveltekit, fastapi fly, best-of-breed saas deploy"
 ---

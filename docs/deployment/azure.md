@@ -1,4 +1,5 @@
 ---
+title: "Deploy FastAPI + SvelteKit to Azure (Container Apps + Static Web Apps)"
 description: "Deploy FastSvelte on Azure - Container Apps for backend, PostgreSQL Flexible Server for database, and Static Web Apps for frontend."
 keywords: "azure deployment, azure container apps, azure postgresql, azure static web apps, fastsvelte azure"
 ---

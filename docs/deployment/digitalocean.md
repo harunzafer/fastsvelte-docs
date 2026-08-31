@@ -1,4 +1,5 @@
 ---
+title: "Deploy FastAPI + SvelteKit to DigitalOcean"
 description: "Deploy FastSvelte on DigitalOcean App Platform: FastAPI container, managed PostgreSQL, and the SvelteKit app + landing as static sites, with custom domains."
 keywords: "deploy fastsvelte digitalocean, app platform fastapi, do managed postgres, digitalocean sveltekit"
 ---

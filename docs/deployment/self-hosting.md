@@ -1,4 +1,5 @@
 ---
+title: "Self-Host FastAPI + SvelteKit with Docker Compose"
 description: "Deploy FastSvelte with Docker Compose - Self-hosted deployment on your own server or VPS."
 keywords: "docker compose deployment, self-hosted fastsvelte, vps deployment"
 ---
