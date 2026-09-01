@@ -1,37 +1,5 @@
 {
   "framework": null,
   "buildCommand": null,
-  "outputDirectory": "public",
-  "redirects": [
-    {
-      "source": "/deployment/vercel/",
-      "destination": "/deployment/fly-neon-vercel/",
-      "permanent": true
-    },
-    {
-      "source": "/deployment/vercel",
-      "destination": "/deployment/fly-neon-vercel/",
-      "permanent": true
-    },
-    {
-      "source": "/deployment/neon/",
-      "destination": "/deployment/fly-neon-vercel/",
-      "permanent": true
-    },
-    {
-      "source": "/deployment/neon",
-      "destination": "/deployment/fly-neon-vercel/",
-      "permanent": true
-    },
-    {
-      "source": "/deployment/docker-compose/",
-      "destination": "/deployment/self-hosting/",
-      "permanent": true
-    },
-    {
-      "source": "/deployment/docker-compose",
-      "destination": "/deployment/self-hosting/",
-      "permanent": true
-    }
-  ]
+  "outputDirectory": "public"
 }

@@ -61,6 +61,13 @@ plugins:
   - search
   - meta
   - social
+  # Old URLs from the docs restructure still ranked in Google and 404ed; these emit
+  # redirect pages at the old paths so readers and crawlers land on the merged guides.
+  - redirects:
+      redirect_maps:
+        deployment/vercel.md: deployment/fly-neon-vercel.md
+        deployment/neon.md: deployment/fly-neon-vercel.md
+        deployment/docker-compose.md: deployment/self-hosting.md
   - llmstxt:
       full_output: llms-full.txt
       markdown_description: |
