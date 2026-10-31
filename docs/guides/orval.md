@@ -1,5 +1,6 @@
 ---
-description: "FastSvelte type-safe API client: how Orval generates a TypeScript client from the FastAPI OpenAPI spec, and how to regenerate it after backend changes."
+title: "Orval with FastAPI: Generate a Typed TypeScript Client"
+description: "Generate a typed TypeScript client from your FastAPI OpenAPI spec with Orval, and regenerate it when the backend changes. How it works in FastSvelte."
 keywords: "fastsvelte orval, type-safe api client, openapi, typescript client generation, fastapi openapi, sveltekit api client"
 ---
 
